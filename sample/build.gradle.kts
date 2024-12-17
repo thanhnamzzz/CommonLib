@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "io.virgo_common.common_lib"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "io.virgo_common.common_lib"
@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 
     buildFeatures { viewBinding = true }

@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CommonLib"
-include(":sample")
-include(":common_libs")
+include(":sample", ":common_libs")

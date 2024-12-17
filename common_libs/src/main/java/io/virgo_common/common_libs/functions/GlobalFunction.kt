@@ -4,8 +4,6 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
 import android.util.Log
 import android.view.Window
@@ -155,28 +153,6 @@ object GlobalFunction {
         } catch (e: ActivityNotFoundException) {
             val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(devUrl))
             context.startActivity(webIntent)
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    fun isConnectedInternet(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (isM23Plus()) {
-            var networkCapabilities: NetworkCapabilities? = null
-            val network = connectivityManager.activeNetwork
-            if (network != null) networkCapabilities =
-                connectivityManager.getNetworkCapabilities(network)
-
-            networkCapabilities?.let {
-                return if (it.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) true
-                else if (it.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) true
-                else it.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-            } ?: run { return false }
-        } else {
-            connectivityManager.activeNetworkInfo?.let {
-                return it.isConnected
-            } ?: run { return false }
         }
     }
 }

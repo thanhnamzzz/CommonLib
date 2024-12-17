@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.virgo_common.common_lib.databinding.ActivityMainBinding
 import io.virgo_common.common_libs.baseApp.SimpleActivity
+import io.virgo_common.common_libs.functions.GlobalFunction
 
 class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,5 +19,7 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        GlobalFunction.hideSystemNavigationBar(window)
     }
 }

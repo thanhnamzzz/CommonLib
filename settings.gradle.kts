@@ -20,5 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "CommonLib"
-include(":app")
+include(":sample")
 include(":common_libs")

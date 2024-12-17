@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("maven-publish")
 }
 
 android {
@@ -32,6 +33,14 @@ android {
     }
 
     buildFeatures { viewBinding = true }
+}
+
+publishing.publications {
+    create<MavenPublication>("release") {
+        afterEvaluate {
+            from(components["release"])
+        }
+    }
 }
 
 dependencies {

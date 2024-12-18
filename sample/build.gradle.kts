@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "io.virgo_common.common_lib"
-    compileSdk = 35
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "io.virgo_common.common_lib"

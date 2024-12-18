@@ -2,7 +2,7 @@ package io.virgo_common.common_libs.functions
 
 object Sort {
     fun <T, R : Comparable<R>> sortByProperty(
-        list: MutableList<T>,
+        list: Iterable<T>,
         isAscending: Boolean = true,
         propertySelector: (T) -> R,
     ): List<T> {

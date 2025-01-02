@@ -90,11 +90,15 @@ object GlobalFunction {
         activity.startActivity(Intent.createChooser(intent, "Share via"))
     }
 
-    fun openPrivacyPolicy(activity: Activity) {
+    fun openPrivacyPolicy(activity: Activity, link: String) {
         //Need add queries action view in manifest
+        if (link.isBlank()) {
+            Log.d("Namzzz", "GlobalFunction: openPrivacyPolicy link is blank")
+            return
+        }
         val intent = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("https://gambisoft.com/policy.html")
+            Uri.parse(link)
         )
         if (intent.resolveActivity(activity.packageManager) != null) activity.startActivity(intent)
         else Log.d("Namzzz", "GlobalFunction: openPrivacyPolicy null")
@@ -142,7 +146,11 @@ object GlobalFunction {
         }
     }
 
-    fun openMoreApp(context: Context, id: String = "GambiSoftVn") {
+    fun openMoreApp(context: Context, id: String) {
+        if (id.isBlank()) {
+            Log.d("Namzzz", "GlobalFunction: openMoreApp id is blank")
+            return
+        }
         val devUrl = "https://play.google.com/store/apps/developer?id=$id"
         val intent = Intent(Intent.ACTION_VIEW).apply {
             data = Uri.parse(devUrl)

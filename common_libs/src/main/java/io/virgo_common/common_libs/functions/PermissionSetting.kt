@@ -1,0 +1,66 @@
+package io.virgo_common.common_libs.functions
+
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import io.virgo_common.common_libs.extensions.isLLP22Plus
+import io.virgo_common.common_libs.extensions.isM23Plus
+import io.virgo_common.common_libs.extensions.isO26Plus
+import io.virgo_common.common_libs.extensions.isR30Plus
+
+fun Context.openAppSettings(resultLauncher: ActivityResultLauncher<Intent>) {
+	val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+	val uri = Uri.fromParts("package", packageName, null)
+	intent.data = uri
+	resultLauncher.launch(intent)
+}
+
+fun Context.setAllFile(resultLauncher: ActivityResultLauncher<Intent>) {
+	if (isR30Plus()) {
+		val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
+			data = Uri.parse("package:$packageName")
+		}
+		resultLauncher.launch(intent)
+	}
+}
+
+fun Context.openAppSettingsDrawOverOtherApp(resultLauncher: ActivityResultLauncher<Intent>) {
+	if (isM23Plus()) {
+		val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).apply {
+			data = Uri.parse("package:$packageName")
+		}
+		resultLauncher.launch(intent)
+	}
+}
+
+/** Quyền truy cập thông báo */
+fun openAppSettingsNotificationAccess(resultLauncher: ActivityResultLauncher<Intent>) {
+	if (isLLP22Plus()) {
+		val intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+		resultLauncher.launch(intent)
+	}
+}
+
+/** Quyền thông báo */
+fun Context.openAppSettingsNotification(resultLauncher: ActivityResultLauncher<Intent>) {
+	if (isO26Plus()) {
+		val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+			putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+		}
+		resultLauncher.launch(intent)
+	} else {
+		openAppSettings(resultLauncher)
+	}
+}
+
+fun openAppSettingsLocation(resultLauncher: ActivityResultLauncher<Intent>) {
+	val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+	resultLauncher.launch(intent)
+}
+
+fun openAppSettingsWifi(resultLauncher: ActivityResultLauncher<Intent>) {
+	val intent = Intent(Settings.ACTION_WIFI_SETTINGS)
+	resultLauncher.launch(intent)
+}

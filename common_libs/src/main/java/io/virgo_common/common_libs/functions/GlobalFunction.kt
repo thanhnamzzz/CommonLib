@@ -165,11 +165,4 @@ object GlobalFunction {
 			context.startActivity(webIntent)
 		}
 	}
-
-	fun Context.openAppSettings(resultLauncher: ActivityResultLauncher<Intent>) {
-		val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-		val uri = Uri.fromParts("package", packageName, null)
-		intent.data = uri
-		resultLauncher.launch(intent)
-	}
 }

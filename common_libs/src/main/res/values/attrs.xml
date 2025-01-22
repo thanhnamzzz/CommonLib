@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StrokeTextView">
+        <attr name="strokeTextColor" format="color" />
+        <attr name="strokeBorderColor" format="color" />
+        <attr name="strokeBorderWidth" format="float" />
+        <attr name="strokeBorderJoin" format="enum">
+            <enum name="MITER" value="0" />
+            <enum name="ROUND" value="1" />
+            <enum name="BEVEL" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

@@ -24,6 +24,7 @@ dependencies {
 | View | Description |
 | --- | --- |
 | `FingerGestures` | Touch and swipe for a view |
+| `GradientBackgroundButton` | Gradient background button |
 | `GradientTextView` | Gradient text view |
 | `StrokeTextView` | Stroke text view |
 #### Extensions:

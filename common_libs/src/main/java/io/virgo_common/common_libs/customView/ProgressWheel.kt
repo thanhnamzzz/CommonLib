@@ -37,9 +37,10 @@ class ProgressWheel : View {
 	private var barExtraLength = 0f
 	private var barGrowingFromFront = true
 	private var pausedTimeWithoutGrowing: Long = 0
+	private var borderProgress = false
 
 	//Colors (with defaults)
-	internal var barColor = -0x56000000
+	var barColor = -0x56000000
 	private var rimColor = 0x00FFFFFF
 
 	//Paints
@@ -147,7 +148,7 @@ class ProgressWheel : View {
 	override fun onSizeChanged(w: Int, h: Int, oldW: Int, oldH: Int) {
 		super.onSizeChanged(w, h, oldW, oldH)
 
-		setupBounds(w, h)
+		setupBounds()
 		setupPaints()
 		invalidate()
 	}
@@ -161,6 +162,9 @@ class ProgressWheel : View {
 		barPaint.isAntiAlias = true
 		barPaint.style = Paint.Style.STROKE
 		barPaint.strokeWidth = barWidth.toFloat()
+		if (borderProgress)
+			barPaint.strokeCap = Paint.Cap.ROUND
+		else barPaint.strokeCap = Paint.Cap.SQUARE
 
 		rimPaint.color = rimColor
 		rimPaint.isAntiAlias = true
@@ -171,7 +175,7 @@ class ProgressWheel : View {
 	/**
 	 * Set the bounds of the component
 	 */
-	private fun setupBounds(layout_width: Int, layout_height: Int) {
+	private fun setupBounds() {
 		val paddingTop = paddingTop
 		val paddingBottom = paddingBottom
 		val paddingLeft = paddingLeft
@@ -180,18 +184,16 @@ class ProgressWheel : View {
 		if (!fillRadius) {
 			// Width should equal to Height, find the min value to setup the circle
 			val minValue = min(
-				(layout_width - paddingLeft - paddingRight).toDouble(),
-				(layout_height - paddingBottom - paddingTop).toDouble()
+				(width - paddingLeft - paddingRight).toDouble(),
+				(height - paddingBottom - paddingTop).toDouble()
 			).toInt()
 
 			val circleDiameter =
 				min(minValue.toDouble(), (circleRadius * 2 - barWidth * 2).toDouble()).toInt()
 
 			// Calc the Offset if needed for centering the wheel in the available space
-			val xOffset =
-				(layout_width - paddingLeft - paddingRight - circleDiameter) / 2 + paddingLeft
-			val yOffset =
-				(layout_height - paddingTop - paddingBottom - circleDiameter) / 2 + paddingTop
+			val xOffset = (width - paddingLeft - paddingRight - circleDiameter) / 2 + paddingLeft
+			val yOffset = (height - paddingTop - paddingBottom - circleDiameter) / 2 + paddingTop
 
 			circleBounds =
 				RectF(
@@ -204,8 +206,8 @@ class ProgressWheel : View {
 			circleBounds = RectF(
 				(paddingLeft + barWidth).toFloat(),
 				(paddingTop + barWidth).toFloat(),
-				(layout_width - paddingRight - barWidth).toFloat(),
-				(layout_height - paddingBottom - barWidth).toFloat()
+				(width - paddingRight - barWidth).toFloat(),
+				(height - paddingBottom - barWidth).toFloat()
 			)
 		}
 	}
@@ -218,45 +220,24 @@ class ProgressWheel : View {
 	private fun parseAttributes(a: TypedArray) {
 		// We transform the default values from DIP to pixels
 		val metrics = context.resources.displayMetrics
-		barWidth =
-			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth.toFloat(), metrics)
-				.toInt()
-		rimWidth =
-			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth.toFloat(), metrics)
-				.toInt()
-		circleRadius =
-			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius.toFloat(), metrics)
-				.toInt()
-
-		circleRadius =
-			a.getDimension(R.styleable.ProgressWheel_pw_circleRadius, circleRadius.toFloat())
-				.toInt()
-
+		barWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth.toFloat(), metrics).toInt()
+		rimWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth.toFloat(), metrics).toInt()
+		circleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius.toFloat(), metrics).toInt()
+		circleRadius = a.getDimension(R.styleable.ProgressWheel_pw_circleRadius, circleRadius.toFloat()).toInt()
 		fillRadius = a.getBoolean(R.styleable.ProgressWheel_pw_fillRadius, false)
-
-		barWidth =
-			a.getDimension(R.styleable.ProgressWheel_pw_barWidth, barWidth.toFloat()).toInt()
-
-		rimWidth =
-			a.getDimension(R.styleable.ProgressWheel_pw_rimWidth, rimWidth.toFloat()).toInt()
-
-		val baseSpinSpeed =
-			a.getFloat(R.styleable.ProgressWheel_pw_spinSpeed, spinSpeed / 360.0f)
+		barWidth = a.getDimension(R.styleable.ProgressWheel_pw_barWidth, barWidth.toFloat()).toInt()
+		rimWidth = a.getDimension(R.styleable.ProgressWheel_pw_rimWidth, rimWidth.toFloat()).toInt()
+		val baseSpinSpeed = a.getFloat(R.styleable.ProgressWheel_pw_spinSpeed, spinSpeed / 360.0f)
 		spinSpeed = baseSpinSpeed * 360
 
-		barSpinCycleTime =
-			a.getInt(R.styleable.ProgressWheel_pw_barSpinCycleTime, barSpinCycleTime.toInt())
-				.toDouble()
-
+		barSpinCycleTime = a.getInt(R.styleable.ProgressWheel_pw_barSpinCycleTime, barSpinCycleTime.toInt()).toDouble()
 		barColor = a.getColor(R.styleable.ProgressWheel_pw_barColor, barColor)
-
 		rimColor = a.getColor(R.styleable.ProgressWheel_pw_rimColor, rimColor)
 
 		linearProgress = a.getBoolean(R.styleable.ProgressWheel_pw_linearProgress, false)
+		borderProgress = a.getBoolean(R.styleable.ProgressWheel_pw_borderProgress, false)
 
-		if (a.getBoolean(R.styleable.ProgressWheel_pw_progressIndeterminate, false)) {
-			spin()
-		}
+		if (a.getBoolean(R.styleable.ProgressWheel_pw_progressIndeterminate, false)) spin()
 
 		// Recycle
 		a.recycle()
@@ -265,9 +246,7 @@ class ProgressWheel : View {
 	fun setCallback(progressCallback: ProgressCallback?) {
 		callback = progressCallback
 
-		if (!isSpinning) {
-			runCallback()
-		}
+		if (!isSpinning) runCallback()
 	}
 
 	//----------------------------------
@@ -280,9 +259,7 @@ class ProgressWheel : View {
 
 		var mustInvalidate = false
 
-		if (!shouldAnimate) {
-			return
-		}
+		if (!shouldAnimate) return
 
 		if (isSpinning) {
 			//Draw the spinning bar
@@ -339,10 +316,8 @@ class ProgressWheel : View {
 			var progress = mProgress
 			if (!linearProgress) {
 				val factor = 2.0f
-				offset =
-					(1.0f - (1.0f - mProgress / 360.0f).pow((2.0f * factor))) * 360.0f
-				progress =
-					(1.0f - (1.0f - mProgress / 360.0f).pow(factor)) * 360.0f
+				offset = (1.0f - (1.0f - mProgress / 360.0f).pow((2.0f * factor))) * 360.0f
+				progress = (1.0f - (1.0f - mProgress / 360.0f).pow(factor)) * 360.0f
 			}
 
 			if (isInEditMode) {
@@ -424,15 +399,13 @@ class ProgressWheel : View {
 	}
 
 	private fun runCallback(value: Float) {
-		if (callback != null) {
-			callback!!.onProgressUpdate(value)
-		}
+		callback?.onProgressUpdate(value)
 	}
 
 	private fun runCallback() {
-		if (callback != null) {
+		callback?.let {
 			val normalizedProgress = Math.round(mProgress * 100 / 360.0f).toFloat() / 100
-			callback!!.onProgressUpdate(normalizedProgress)
+			it.onProgressUpdate(normalizedProgress)
 		}
 	}
 

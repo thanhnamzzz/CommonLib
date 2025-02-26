@@ -40,7 +40,7 @@ class ProgressWheel : View {
 	private var borderProgress = false
 
 	//Colors (with defaults)
-	var barColor = -0x56000000
+	private var barColor = -0x56000000
 	private var rimColor = 0x00FFFFFF
 
 	//Paints
@@ -113,15 +113,21 @@ class ProgressWheel : View {
 		val heightSize = MeasureSpec.getSize(heightMeasureSpec)
 
 		//Measure Width
-		val width: Int = if (widthMode == MeasureSpec.EXACTLY) {
-			//Must be this size
-			widthSize
-		} else if (widthMode == MeasureSpec.AT_MOST) {
-			//Can't be bigger than...
-			min(viewWidth.toDouble(), widthSize.toDouble()).toInt()
-		} else {
-			//Be whatever you want
-			viewWidth
+		val width: Int = when (widthMode) {
+			MeasureSpec.EXACTLY -> {
+				//Must be this size
+				widthSize
+			}
+
+			MeasureSpec.AT_MOST -> {
+				//Can't be bigger than...
+				min(viewWidth.toDouble(), widthSize.toDouble()).toInt()
+			}
+
+			else -> {
+				//Be whatever you want
+				viewWidth
+			}
 		}
 
 		//Measure Height
@@ -220,17 +226,27 @@ class ProgressWheel : View {
 	private fun parseAttributes(a: TypedArray) {
 		// We transform the default values from DIP to pixels
 		val metrics = context.resources.displayMetrics
-		barWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth.toFloat(), metrics).toInt()
-		rimWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth.toFloat(), metrics).toInt()
-		circleRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius.toFloat(), metrics).toInt()
-		circleRadius = a.getDimension(R.styleable.ProgressWheel_pw_circleRadius, circleRadius.toFloat()).toInt()
+		barWidth =
+			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth.toFloat(), metrics)
+				.toInt()
+		rimWidth =
+			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth.toFloat(), metrics)
+				.toInt()
+		circleRadius =
+			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius.toFloat(), metrics)
+				.toInt()
+		circleRadius =
+			a.getDimension(R.styleable.ProgressWheel_pw_circleRadius, circleRadius.toFloat())
+				.toInt()
 		fillRadius = a.getBoolean(R.styleable.ProgressWheel_pw_fillRadius, false)
 		barWidth = a.getDimension(R.styleable.ProgressWheel_pw_barWidth, barWidth.toFloat()).toInt()
 		rimWidth = a.getDimension(R.styleable.ProgressWheel_pw_rimWidth, rimWidth.toFloat()).toInt()
 		val baseSpinSpeed = a.getFloat(R.styleable.ProgressWheel_pw_spinSpeed, spinSpeed / 360.0f)
 		spinSpeed = baseSpinSpeed * 360
 
-		barSpinCycleTime = a.getInt(R.styleable.ProgressWheel_pw_barSpinCycleTime, barSpinCycleTime.toInt()).toDouble()
+		barSpinCycleTime =
+			a.getInt(R.styleable.ProgressWheel_pw_barSpinCycleTime, barSpinCycleTime.toInt())
+				.toDouble()
 		barColor = a.getColor(R.styleable.ProgressWheel_pw_barColor, barColor)
 		rimColor = a.getColor(R.styleable.ProgressWheel_pw_rimColor, rimColor)
 
@@ -277,7 +293,7 @@ class ProgressWheel : View {
 				// A full turn has been completed
 				// we run the callback with -1 in case we want to
 				// do something, like changing the color
-				runCallback(-1.0f)
+				runCallbackA()
 			}
 			lastTimeAnimated = SystemClock.uptimeMillis()
 
@@ -398,8 +414,8 @@ class ProgressWheel : View {
 		invalidate()
 	}
 
-	private fun runCallback(value: Float) {
-		callback?.onProgressUpdate(value)
+	private fun runCallbackA() {
+		callback?.onProgressUpdate(-1f)
 	}
 
 	private fun runCallback() {
@@ -464,24 +480,22 @@ class ProgressWheel : View {
 		if (state !is WheelSavedState) {
 			super.onRestoreInstanceState(state)
 			return
+		} else {
+			super.onRestoreInstanceState(state.superState)
+			this.mProgress = state.mProgress
+			this.mTargetProgress = state.mTargetProgress
+			this.isSpinning = state.isSpinning
+			this.spinSpeed = state.spinSpeed
+			this.barWidth = state.barWidth
+			this.barColor = state.barColor
+			this.rimWidth = state.rimWidth
+			this.rimColor = state.rimColor
+			this.circleRadius = state.circleRadius
+			this.linearProgress = state.linearProgress
+			this.fillRadius = state.fillRadius
+
+			this.lastTimeAnimated = SystemClock.uptimeMillis()
 		}
-
-		val ss = state
-		super.onRestoreInstanceState(ss.superState)
-
-		this.mProgress = ss.mProgress
-		this.mTargetProgress = ss.mTargetProgress
-		this.isSpinning = ss.isSpinning
-		this.spinSpeed = ss.spinSpeed
-		this.barWidth = ss.barWidth
-		this.barColor = ss.barColor
-		this.rimWidth = ss.rimWidth
-		this.rimColor = ss.rimColor
-		this.circleRadius = ss.circleRadius
-		this.linearProgress = ss.linearProgress
-		this.fillRadius = ss.fillRadius
-
-		this.lastTimeAnimated = SystemClock.uptimeMillis()
 	}
 
 	var progress: Float

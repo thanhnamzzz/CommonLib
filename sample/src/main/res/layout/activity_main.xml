@@ -12,17 +12,18 @@
         android:layout_height="wrap_content"
         android:text="Hello World!"
         android:textSize="30sp"
-        app:text_color1="@color/get_started_5"
-        app:text_color2="@color/get_started_4"
-        app:text_color3="@color/get_started_1"
-        app:text_color4="@color/get_started_2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:orientationColorTextView="HORIZONTAL" />
+        app:orientationColorTextView="HORIZONTAL"
+        app:text_color1="@color/get_started_5"
+        app:text_color2="@color/get_started_4"
+        app:text_color3="@color/get_started_1"
+        app:text_color4="@color/get_started_2" />
 
     <io.virgo_common.common_libs.customView.GradientBackgroundButton
+        android:id="@+id/gradient_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingHorizontal="@dimen/_50sdp"
@@ -36,5 +37,22 @@
         app:orientationColor="BR_TL"
         app:strokeColor="@color/black"
         app:strokeWidth="5dp" />
+
+    <io.virgo_common.common_libs.customView.ProgressWheel
+        android:id="@+id/progress_circular"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:padding="@dimen/_15sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gradient_text"
+        app:pw_barColor="@color/black"
+        app:pw_barWidth="@dimen/_6sdp"
+        app:pw_borderProgress="true"
+        app:pw_circleRadius="@dimen/_80sdp"
+        app:pw_fillRadius="false"
+        app:pw_linearProgress="false"
+        app:pw_spinSpeed="0.7"
+        app:pw_progressIndeterminate="true"
+        app:pw_rimColor="@color/none" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

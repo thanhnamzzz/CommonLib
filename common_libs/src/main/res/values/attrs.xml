@@ -45,4 +45,16 @@
             <enum name="DIAGONAL" value="2" />
         </attr>
     </declare-styleable>
+    <declare-styleable name="ProgressWheel">
+        <attr name="pw_progressIndeterminate" format="boolean" />
+        <attr name="pw_barColor" format="color" />
+        <attr name="pw_rimColor" format="color" />
+        <attr name="pw_rimWidth" format="dimension" />
+        <attr name="pw_spinSpeed" format="float" />
+        <attr name="pw_barSpinCycleTime" format="integer" />
+        <attr name="pw_circleRadius" format="dimension" />
+        <attr name="pw_fillRadius" format="boolean" />
+        <attr name="pw_barWidth" format="dimension" />
+        <attr name="pw_linearProgress" format="boolean" />
+    </declare-styleable>
 </resources>

@@ -27,6 +27,7 @@ dependencies {
 | `GradientBackgroundButton` | Gradient background button |
 | `GradientTextView` | Gradient text view |
 | `StrokeTextView` | Stroke text view |
+| `ProgressWheel` | A custom progressbar |
 #### Extensions:
 Many extensions such as:
 - `Binding`: for class `SimpleActivity` và `SimpleFragment`

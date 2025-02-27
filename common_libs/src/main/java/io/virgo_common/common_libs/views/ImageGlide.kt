@@ -84,6 +84,43 @@ fun Context.loadImage(
 	view: ImageView,
 	image: Any,
 	trans: ImageTrans,
+	error: Any,
+	complete: (complete: Boolean, error: String?) -> Unit
+) {
+	val exception = CoroutineExceptionHandler { _, throwable ->
+		throwable.message?.let {
+			(this as Activity).runOnUiThread {
+				complete(false, it)
+			}
+		}
+	}
+	CoroutineScope(Dispatchers.Main).launch(exception) {
+		when (trans) {
+			ImageTrans.FIT_CENTER -> Glide.with(this@loadImage).load(image).fitCenter().error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
+
+			ImageTrans.CENTER_CROP -> Glide.with(this@loadImage).load(image).centerCrop().error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
+
+			ImageTrans.CENTER_INSIDE -> Glide.with(this@loadImage).load(image).centerInside().error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
+
+			ImageTrans.CIRCLE_CROP -> Glide.with(this@loadImage).load(image).circleCrop().error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
+		}
+		complete(true, null)
+		cancel()
+	}
+}
+
+fun Context.loadImage(
+	view: ImageView,
+	image: Any,
+	trans: ImageTrans,
 	placeHolder: Drawable?,
 	error: Any,
 	complete: (complete: Boolean, error: String?) -> Unit
@@ -98,17 +135,24 @@ fun Context.loadImage(
 	CoroutineScope(Dispatchers.Main).launch(exception) {
 		when (trans) {
 			ImageTrans.FIT_CENTER -> Glide.with(this@loadImage).load(image).fitCenter()
-				.placeholder(placeHolder).error(error).into(view)
+				.placeholder(placeHolder).error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
 
 			ImageTrans.CENTER_CROP -> Glide.with(this@loadImage).load(image).centerCrop()
-				.placeholder(placeHolder).error(error).into(view)
+				.placeholder(placeHolder).error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
 
 			ImageTrans.CENTER_INSIDE -> Glide.with(this@loadImage).load(image).centerInside()
-				.placeholder(placeHolder).error(error)
-				.into(view)
+				.placeholder(placeHolder).error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
 
 			ImageTrans.CIRCLE_CROP -> Glide.with(this@loadImage).load(image).circleCrop()
-				.placeholder(placeHolder).error(error).into(view)
+				.placeholder(placeHolder).error(
+					Glide.with(this@loadImage).load(error).centerInside()
+				).into(view)
 		}
 		complete(true, null)
 		cancel()

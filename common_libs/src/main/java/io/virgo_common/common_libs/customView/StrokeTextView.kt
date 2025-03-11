@@ -18,15 +18,19 @@ class StrokeTextView @JvmOverloads constructor(
 	private var textColor: Int = Color.BLACK
 	private var borderColor: Int = Color.WHITE
 	private var borderWidth: Float = 5f
-	private var borderJoin : Join = Join.MITER
+	private var borderJoin: Join = Join.MITER
 
 	init {
 		attrs?.let {
 			val typedArray = context.obtainStyledAttributes(it, R.styleable.StrokeTextView, 0, 0)
 			textColor = typedArray.getColor(R.styleable.StrokeTextView_strokeTextColor, Color.BLACK)
-			borderColor = typedArray.getColor(R.styleable.StrokeTextView_strokeBorderColor, Color.WHITE)
+			borderColor =
+				typedArray.getColor(R.styleable.StrokeTextView_strokeBorderColor, Color.WHITE)
 			borderWidth = typedArray.getFloat(R.styleable.StrokeTextView_strokeBorderWidth, 5f)
-			borderJoin = Join.entries.toTypedArray()[typedArray.getInt(R.styleable.StrokeTextView_strokeBorderJoin, 0)]
+			borderJoin = Join.entries.toTypedArray()[typedArray.getInt(
+				R.styleable.StrokeTextView_strokeBorderJoin,
+				0
+			)]
 			typedArray.recycle()
 		}
 	}
@@ -44,5 +48,25 @@ class StrokeTextView @JvmOverloads constructor(
 		setTextColor(textColor)
 		paint.style = Paint.Style.FILL
 		super.onDraw(canvas)
+	}
+
+	fun borderColor(color: Int) {
+		borderColor = color
+		invalidate()
+	}
+
+	fun textColor(color: Int) {
+		textColor = color
+		invalidate()
+	}
+
+	fun borderWidth(width: Float) {
+		borderWidth = width
+		invalidate()
+	}
+
+	fun borderJoin(join: Join) {
+		borderJoin = join
+		invalidate()
 	}
 }

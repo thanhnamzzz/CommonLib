@@ -11,7 +11,11 @@
         android:roundIcon="@mipmap/virgo"
         android:supportsRtl="true"
         android:theme="@style/Theme.CommonLib"
-        tools:targetApi="31">
+        tools:targetApi="tiramisu">
+        <activity
+            android:name=".MaterialEditTextActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

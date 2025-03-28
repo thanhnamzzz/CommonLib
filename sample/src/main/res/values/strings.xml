@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">CommonLib</string>
+    <string name="app_name" translatable="false">CommonLib</string>
+
+
+    <string name="action_settings">Settings</string>
+    <string name="new_account">New Account</string>
+    <string name="description">Description</string>
+    <string name="title">Title</string>
 </resources>

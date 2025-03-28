@@ -15,6 +15,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        resourceConfigurations += listOf("en", "vi", "hi", "ja")
     }
 
     buildTypes {
@@ -35,6 +36,8 @@ android {
     }
 
     buildFeatures { viewBinding = true }
+
+//    androidResources { generateLocaleConfig = true }
 }
 
 dependencies {

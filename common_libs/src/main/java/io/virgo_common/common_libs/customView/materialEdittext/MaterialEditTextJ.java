@@ -49,7 +49,7 @@ import io.virgo_common.common_libs.customView.materialEdittext.validation.METVal
  * author:rengwuxian
  * <p/>
  */
-public class MaterialEditText extends AppCompatEditText {
+public class MaterialEditTextJ extends AppCompatEditText {
 
     /**
      * the spacing between the main text and the inner top padding.
@@ -303,17 +303,17 @@ public class MaterialEditText extends AppCompatEditText {
     private List<METValidator> validators;
     private METLengthChecker lengthChecker;
 
-    public MaterialEditText(Context context) {
+    public MaterialEditTextJ(Context context) {
         super(context);
         init(context, null);
     }
 
-    public MaterialEditText(Context context, AttributeSet attrs) {
+    public MaterialEditTextJ(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public MaterialEditText(Context context, AttributeSet attrs, int style) {
+    public MaterialEditTextJ(Context context, AttributeSet attrs, int style) {
         super(context, attrs, style);
         init(context, attrs);
     }
@@ -1211,7 +1211,7 @@ public class MaterialEditText extends AppCompatEditText {
      * @param validator Validator to add
      * @return This instance, for easy chaining
      */
-    public MaterialEditText addValidator(METValidator validator) {
+    public MaterialEditTextJ addValidator(METValidator validator) {
         if (validators == null) {
             this.validators = new ArrayList<>();
         }

@@ -38,9 +38,19 @@ fun isP28Plus(): Boolean {
 	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 }
 
+@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.O_MR1)
+fun isO27Plus(): Boolean {
+	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
+}
+
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.O)
 fun isO26Plus(): Boolean {
 	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+}
+
+@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.N_MR1)
+fun isN25Plus(): Boolean {
+	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.N)

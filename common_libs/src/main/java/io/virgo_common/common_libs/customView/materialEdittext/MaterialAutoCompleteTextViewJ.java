@@ -3,7 +3,6 @@ package io.virgo_common.common_libs.customView.materialEdittext;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -22,21 +21,21 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.TransformationMethod;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.content.res.ColorStateList;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.core.content.res.ResourcesCompat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import io.virgo_common.common_libs.R;
 import io.virgo_common.common_libs.customView.materialEdittext.enums.FloatingLabelType;
@@ -44,9 +43,12 @@ import io.virgo_common.common_libs.customView.materialEdittext.validation.METLen
 import io.virgo_common.common_libs.customView.materialEdittext.validation.METValidator;
 
 /**
- * Created by rengwuxian on 2015/1/8.
+ * AutoCompleteTextView in Material Design
+ * <p/>
+ * author:rengwuxian
+ * <p/>
  */
-public class MaterialMultiAutoCompleteTextView extends AppCompatMultiAutoCompleteTextView {
+public class MaterialAutoCompleteTextViewJ extends AppCompatAutoCompleteTextView {
 
     /**
      * the spacing between the main text and the inner top padding.
@@ -300,17 +302,17 @@ public class MaterialMultiAutoCompleteTextView extends AppCompatMultiAutoComplet
     private List<METValidator> validators;
     private METLengthChecker lengthChecker;
 
-    public MaterialMultiAutoCompleteTextView(Context context) {
+    public MaterialAutoCompleteTextViewJ(Context context) {
         super(context);
         init(context, null);
     }
 
-    public MaterialMultiAutoCompleteTextView(Context context, AttributeSet attrs) {
+    public MaterialAutoCompleteTextViewJ(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public MaterialMultiAutoCompleteTextView(Context context, AttributeSet attrs, int style) {
+    public MaterialAutoCompleteTextViewJ(Context context, AttributeSet attrs, int style) {
         super(context, attrs, style);
         init(context, attrs);
     }
@@ -1113,36 +1115,36 @@ public class MaterialMultiAutoCompleteTextView extends AppCompatMultiAutoComplet
         return tempErrorText == null && isCharactersCountValid();
     }
 
-    /**
-     * if the main text matches the regex
-     *
-     * @deprecated use the new validator interface to add your own custom validator
-     */
-    @Deprecated
-    public boolean isValid(String regex) {
-        if (regex == null) {
-            return false;
-        }
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(getText());
-        return matcher.matches();
-    }
-
-    /**
-     * check if the main text matches the regex, and set the error text if not.
-     *
-     * @return true if it matches the regex, false if not.
-     * @deprecated use the new validator interface to add your own custom validator
-     */
-    @Deprecated
-    public boolean validate(String regex, CharSequence errorText) {
-        boolean isValid = isValid(regex);
-        if (!isValid) {
-            setError(errorText);
-        }
-        postInvalidate();
-        return isValid;
-    }
+//    /**
+//     * if the main text matches the regex
+//     *
+//     * @deprecated use the new validator interface to add your own custom validator
+//     */
+//    @Deprecated
+//    public boolean isValid(String regex) {
+//        if (regex == null) {
+//            return false;
+//        }
+//        Pattern pattern = Pattern.compile(regex);
+//        Matcher matcher = pattern.matcher(getText());
+//        return matcher.matches();
+//    }
+//
+//    /**
+//     * check if the main text matches the regex, and set the error text if not.
+//     *
+//     * @return true if it matches the regex, false if not.
+//     * @deprecated use the new validator interface to add your own custom validator
+//     */
+//    @Deprecated
+//    public boolean validate(String regex, CharSequence errorText) {
+//        boolean isValid = isValid(regex);
+//        if (!isValid) {
+//            setError(errorText);
+//        }
+//        postInvalidate();
+//        return isValid;
+//    }
 
     /**
      * Run validation on a single validator instance
@@ -1204,7 +1206,7 @@ public class MaterialMultiAutoCompleteTextView extends AppCompatMultiAutoComplet
      * @param validator Validator to add
      * @return This instance, for easy chaining
      */
-    public MaterialMultiAutoCompleteTextView addValidator(METValidator validator) {
+    public MaterialAutoCompleteTextViewJ addValidator(METValidator validator) {
         if (validators == null) {
             this.validators = new ArrayList<>();
         }
@@ -1447,6 +1449,7 @@ public class MaterialMultiAutoCompleteTextView extends AppCompatMultiAutoComplet
 
     @Override
     public boolean performClick() {
+        Log.d("Namzzz", "MaterialAutoCompleteTextView: performClick");
         return super.performClick();
     }
 
@@ -1484,6 +1487,7 @@ public class MaterialMultiAutoCompleteTextView extends AppCompatMultiAutoComplet
                         clearButtonTouched = false;
                         return true;
                     }
+//                    clearButtonTouched = false;
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     clearButtonTouched = false;

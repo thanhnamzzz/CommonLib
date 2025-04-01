@@ -8,6 +8,7 @@ import android.graphics.Paint.Join
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import io.virgo_common.common_libs.R
+import androidx.core.content.withStyledAttributes
 
 class StrokeTextView @JvmOverloads constructor(
 	context: Context,
@@ -22,16 +23,16 @@ class StrokeTextView @JvmOverloads constructor(
 
 	init {
 		attrs?.let {
-			val typedArray = context.obtainStyledAttributes(it, R.styleable.StrokeTextView, 0, 0)
-			textColor = typedArray.getColor(R.styleable.StrokeTextView_strokeTextColor, Color.BLACK)
-			borderColor =
-				typedArray.getColor(R.styleable.StrokeTextView_strokeBorderColor, Color.WHITE)
-			borderWidth = typedArray.getFloat(R.styleable.StrokeTextView_strokeBorderWidth, 5f)
-			borderJoin = Join.entries.toTypedArray()[typedArray.getInt(
-				R.styleable.StrokeTextView_strokeBorderJoin,
-				0
-			)]
-			typedArray.recycle()
+			context.withStyledAttributes(it, R.styleable.StrokeTextView, 0, 0) {
+				textColor = getColor(R.styleable.StrokeTextView_strokeTextColor, Color.BLACK)
+				borderColor =
+					getColor(R.styleable.StrokeTextView_strokeBorderColor, Color.WHITE)
+				borderWidth = getFloat(R.styleable.StrokeTextView_strokeBorderWidth, 5f)
+				borderJoin = Join.entries.toTypedArray()[getInt(
+					R.styleable.StrokeTextView_strokeBorderJoin,
+					0
+				)]
+			}
 		}
 	}
 

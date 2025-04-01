@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "io.virgo_common.common_lib"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "io.virgo_common.common_lib"
@@ -36,8 +36,6 @@ android {
     }
 
     buildFeatures { viewBinding = true }
-
-//    androidResources { generateLocaleConfig = true }
 }
 
 dependencies {

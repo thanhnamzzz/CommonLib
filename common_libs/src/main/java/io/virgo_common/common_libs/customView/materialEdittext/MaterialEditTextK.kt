@@ -6,7 +6,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.content.res.TypedArray
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -37,6 +36,11 @@ import io.virgo_common.common_libs.customView.materialEdittext.enums.FloatingLab
 import io.virgo_common.common_libs.customView.materialEdittext.validation.METLengthChecker
 import io.virgo_common.common_libs.customView.materialEdittext.validation.METValidator
 import kotlin.math.max
+import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.toColorInt
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
+import androidx.core.graphics.withSave
 
 class MaterialEditTextK : AppCompatEditText {
 	/**
@@ -305,7 +309,7 @@ class MaterialEditTextK : AppCompatEditText {
 			if (field == null) {
 				field = ObjectAnimator.ofFloat(this, "floatingLabelFraction", 0f, 1f)
 			}
-			field!!.setDuration((if (isFloatingLabelAnimating) 300 else 0).toLong())
+			field!!.duration = (if (isFloatingLabelAnimating) 300 else 0).toLong()
 			return field
 		}
 	var labelFocusAnimator: ObjectAnimator? = null
@@ -354,124 +358,123 @@ class MaterialEditTextK : AppCompatEditText {
 		// default baseColor is black
 		val defaultBaseColor: Int = Color.BLACK
 
-		val typedArray: TypedArray =
-			context.obtainStyledAttributes(attrs, R.styleable.MaterialEditText)
-		textColorStateList =
-			typedArray.getColorStateList(R.styleable.MaterialEditText_met_textColor)
-		textColorHintStateList =
-			typedArray.getColorStateList(R.styleable.MaterialEditText_met_textColorHint)
-		baseColor =
-			typedArray.getColor(R.styleable.MaterialEditText_met_baseColor, defaultBaseColor)
+		context.withStyledAttributes(attrs, R.styleable.MaterialEditText) {
+			textColorStateList =
+				getColorStateList(R.styleable.MaterialEditText_met_textColor)
+			textColorHintStateList =
+				getColorStateList(R.styleable.MaterialEditText_met_textColorHint)
+			baseColor =
+				getColor(R.styleable.MaterialEditText_met_baseColor, defaultBaseColor)
 
-		val defaultPrimaryColor: Int = getPrimaryColor(context, baseColor)
+			val defaultPrimaryColor: Int = getPrimaryColor(context, baseColor)
 
-		primaryColor =
-			typedArray.getColor(R.styleable.MaterialEditText_met_primaryColor, defaultPrimaryColor)
-		setFloatingLabelInternal(
-			typedArray.getInt(
-				R.styleable.MaterialEditText_met_floatingLabel,
-				0
+			primaryColor =
+				getColor(R.styleable.MaterialEditText_met_primaryColor, defaultPrimaryColor)
+			setFloatingLabelInternal(
+				getInt(
+					R.styleable.MaterialEditText_met_floatingLabel,
+					0
+				)
 			)
-		)
-		errorColor = typedArray.getColor(
-			R.styleable.MaterialEditText_met_errorColor,
-			Color.parseColor("#e7492E")
-		)
-		minCharacters = typedArray.getInt(R.styleable.MaterialEditText_met_minCharacters, 0)
-		maxCharacters = typedArray.getInt(R.styleable.MaterialEditText_met_maxCharacters, 0)
-		singleLineEllipsis =
-			typedArray.getBoolean(R.styleable.MaterialEditText_met_singleLineEllipsis, false)
-		helperText = typedArray.getString(R.styleable.MaterialEditText_met_helperText)
-		helperTextColor = typedArray.getColor(R.styleable.MaterialEditText_met_helperTextColor, -1)
-		minBottomTextLines =
-			typedArray.getInt(R.styleable.MaterialEditText_met_minBottomTextLines, 0)
-		val fontIdForAccent: Int =
-			typedArray.getResourceId(R.styleable.MaterialEditText_met_accentFont, 0)
-		val fontPathForAccent: String? =
-			typedArray.getString(R.styleable.MaterialEditText_met_accentTypeface)
-		if (fontIdForAccent != 0) {
-			textPaint.setTypeface(ResourcesCompat.getFont(context, fontIdForAccent))
-		} else if (!isInEditMode) {
-			fontPathForAccent?.let {
-				accentTypeface = getCustomTypeface(it)
-				textPaint.setTypeface(accentTypeface)
+			errorColor = getColor(
+				R.styleable.MaterialEditText_met_errorColor,
+				"#e7492E".toColorInt()
+			)
+			minCharacters = getInt(R.styleable.MaterialEditText_met_minCharacters, 0)
+			maxCharacters = getInt(R.styleable.MaterialEditText_met_maxCharacters, 0)
+			singleLineEllipsis =
+				getBoolean(R.styleable.MaterialEditText_met_singleLineEllipsis, false)
+			helperText = getString(R.styleable.MaterialEditText_met_helperText)
+			helperTextColor = getColor(R.styleable.MaterialEditText_met_helperTextColor, -1)
+			minBottomTextLines =
+				getInt(R.styleable.MaterialEditText_met_minBottomTextLines, 0)
+			val fontIdForAccent: Int =
+				getResourceId(R.styleable.MaterialEditText_met_accentFont, 0)
+			val fontPathForAccent: String? =
+				getString(R.styleable.MaterialEditText_met_accentTypeface)
+			if (fontIdForAccent != 0) {
+				textPaint.typeface = ResourcesCompat.getFont(context, fontIdForAccent)
+			} else if (!isInEditMode) {
+				fontPathForAccent?.let {
+					accentTypeface = getCustomTypeface(it)
+					textPaint.setTypeface(accentTypeface)
+				}
 			}
-		}
-		val fontIdForView: Int =
-			typedArray.getResourceId(R.styleable.MaterialEditText_android_fontFamily, 0)
-		val fontPathForView: String? =
-			typedArray.getString(R.styleable.MaterialEditText_met_typeface)
-		if (fontIdForView != 0) {
-			typeface = ResourcesCompat.getFont(context, fontIdForView)
-		} else if (!isInEditMode) {
-			fontPathForView?.let {
-				val typeface: Typeface = getCustomTypeface(it)
-				setTypeface(typeface)
+			val fontIdForView: Int =
+				getResourceId(R.styleable.MaterialEditText_android_fontFamily, 0)
+			val fontPathForView: String? =
+				getString(R.styleable.MaterialEditText_met_typeface)
+			if (fontIdForView != 0) {
+				typeface = ResourcesCompat.getFont(context, fontIdForView)
+			} else if (!isInEditMode) {
+				fontPathForView?.let {
+					val typeface: Typeface = getCustomTypeface(it)
+					setTypeface(typeface)
+				}
 			}
+			floatingLabelText = getString(R.styleable.MaterialEditText_met_floatingLabelText)
+			if (floatingLabelText == null) floatingLabelText = hint
+			floatingLabelPadding = getDimensionPixelSize(
+				R.styleable.MaterialEditText_met_floatingLabelPadding,
+				bottomSpacing
+			)
+			floatingLabelTextSize = getDimensionPixelSize(
+				R.styleable.MaterialEditText_met_floatingLabelTextSize,
+				resources.getDimensionPixelSize(R.dimen.floating_label_text_size)
+			)
+			floatingLabelTextColor =
+				getColor(R.styleable.MaterialEditText_met_floatingLabelTextColor, -1)
+			isFloatingLabelAnimating =
+				getBoolean(R.styleable.MaterialEditText_met_floatingLabelAnimating, true)
+			bottomTextSize = getDimensionPixelSize(
+				R.styleable.MaterialEditText_met_bottomTextSize,
+				resources.getDimensionPixelSize(R.dimen.bottom_text_size)
+			)
+			hideUnderline = getBoolean(R.styleable.MaterialEditText_met_hideUnderline, false)
+			underlineColor = getColor(R.styleable.MaterialEditText_met_underlineColor, -1)
+			autoValidate = getBoolean(R.styleable.MaterialEditText_met_autoValidate, false)
+			iconLeftBitmaps = generateIconBitmaps(
+				getResourceId(
+					R.styleable.MaterialEditText_met_iconLeft,
+					-1
+				)
+			)
+			iconRightBitmaps = generateIconBitmaps(
+				getResourceId(
+					R.styleable.MaterialEditText_met_iconRight,
+					-1
+				)
+			)
+			showClearButton = getBoolean(R.styleable.MaterialEditText_met_clearButton, false)
+			clearButtonBitmaps = generateIconBitmaps(R.mipmap.met_ic_clear)
+			iconPadding = getDimensionPixelSize(
+				R.styleable.MaterialEditText_met_iconPadding,
+				getPixel(16)
+			)
+			floatingLabelAlwaysShown =
+				getBoolean(R.styleable.MaterialEditText_met_floatingLabelAlwaysShown, false)
+			helperTextAlwaysShown =
+				getBoolean(R.styleable.MaterialEditText_met_helperTextAlwaysShown, false)
+			isValidateOnFocusLost =
+				getBoolean(R.styleable.MaterialEditText_met_validateOnFocusLost, false)
+			checkCharactersCountAtBeginning = getBoolean(
+				R.styleable.MaterialEditText_met_checkCharactersCountAtBeginning,
+				true
+			)
+			val padding = getDimensionPixelSize(R.styleable.MaterialEditText_met_padding, 0)
+			innerPaddingLeft =
+				getDimensionPixelSize(R.styleable.MaterialEditText_met_padding_left, padding)
+			innerPaddingTop =
+				getDimensionPixelSize(R.styleable.MaterialEditText_met_padding_top, padding)
+			innerPaddingRight = getDimensionPixelSize(
+				R.styleable.MaterialEditText_met_padding_right,
+				padding
+			)
+			innerPaddingBottom = getDimensionPixelSize(
+				R.styleable.MaterialEditText_met_padding_bottom,
+				padding
+			)
 		}
-		floatingLabelText = typedArray.getString(R.styleable.MaterialEditText_met_floatingLabelText)
-		if (floatingLabelText == null) floatingLabelText = hint
-		floatingLabelPadding = typedArray.getDimensionPixelSize(
-			R.styleable.MaterialEditText_met_floatingLabelPadding,
-			bottomSpacing
-		)
-		floatingLabelTextSize = typedArray.getDimensionPixelSize(
-			R.styleable.MaterialEditText_met_floatingLabelTextSize,
-			resources.getDimensionPixelSize(R.dimen.floating_label_text_size)
-		)
-		floatingLabelTextColor =
-			typedArray.getColor(R.styleable.MaterialEditText_met_floatingLabelTextColor, -1)
-		isFloatingLabelAnimating =
-			typedArray.getBoolean(R.styleable.MaterialEditText_met_floatingLabelAnimating, true)
-		bottomTextSize = typedArray.getDimensionPixelSize(
-			R.styleable.MaterialEditText_met_bottomTextSize,
-			resources.getDimensionPixelSize(R.dimen.bottom_text_size)
-		)
-		hideUnderline = typedArray.getBoolean(R.styleable.MaterialEditText_met_hideUnderline, false)
-		underlineColor = typedArray.getColor(R.styleable.MaterialEditText_met_underlineColor, -1)
-		autoValidate = typedArray.getBoolean(R.styleable.MaterialEditText_met_autoValidate, false)
-		iconLeftBitmaps = generateIconBitmaps(
-			typedArray.getResourceId(
-				R.styleable.MaterialEditText_met_iconLeft,
-				-1
-			)
-		)
-		iconRightBitmaps = generateIconBitmaps(
-			typedArray.getResourceId(
-				R.styleable.MaterialEditText_met_iconRight,
-				-1
-			)
-		)
-		showClearButton = typedArray.getBoolean(R.styleable.MaterialEditText_met_clearButton, false)
-		clearButtonBitmaps = generateIconBitmaps(R.mipmap.met_ic_clear)
-		iconPadding = typedArray.getDimensionPixelSize(
-			R.styleable.MaterialEditText_met_iconPadding,
-			getPixel(16)
-		)
-		floatingLabelAlwaysShown =
-			typedArray.getBoolean(R.styleable.MaterialEditText_met_floatingLabelAlwaysShown, false)
-		helperTextAlwaysShown =
-			typedArray.getBoolean(R.styleable.MaterialEditText_met_helperTextAlwaysShown, false)
-		isValidateOnFocusLost =
-			typedArray.getBoolean(R.styleable.MaterialEditText_met_validateOnFocusLost, false)
-		checkCharactersCountAtBeginning = typedArray.getBoolean(
-			R.styleable.MaterialEditText_met_checkCharactersCountAtBeginning,
-			true
-		)
-		val padding = typedArray.getDimensionPixelSize(R.styleable.MaterialEditText_met_padding, 0)
-		innerPaddingLeft =
-			typedArray.getDimensionPixelSize(R.styleable.MaterialEditText_met_padding_left, padding)
-		innerPaddingTop =
-			typedArray.getDimensionPixelSize(R.styleable.MaterialEditText_met_padding_top, padding)
-		innerPaddingRight = typedArray.getDimensionPixelSize(
-			R.styleable.MaterialEditText_met_padding_right,
-			padding
-		)
-		innerPaddingBottom = typedArray.getDimensionPixelSize(
-			R.styleable.MaterialEditText_met_padding_bottom,
-			padding
-		)
-		typedArray.recycle()
 
 		background = null
 		if (singleLineEllipsis) {
@@ -588,15 +591,11 @@ class MaterialEditTextK : AppCompatEditText {
 
 	private fun generateIconBitmaps(drawable: Drawable?): Array<Bitmap?>? {
 		drawable?.let {
-			val bitmap: Bitmap = Bitmap.createBitmap(
-				it.intrinsicWidth,
-				it.intrinsicHeight,
-				Bitmap.Config.ARGB_8888
-			)
+			val bitmap: Bitmap = createBitmap(it.intrinsicWidth, it.intrinsicHeight)
 			val canvas = Canvas(bitmap)
 			it.setBounds(0, 0, canvas.width, canvas.height)
 			it.draw(canvas)
-			return generateIconBitmaps(Bitmap.createScaledBitmap(bitmap, iconSize, iconSize, false))
+			return generateIconBitmaps(bitmap.scale(iconSize, iconSize, false))
 		} ?: run { return null }
 	}
 
@@ -645,7 +644,7 @@ class MaterialEditTextK : AppCompatEditText {
 				scaledHeight = iconSize
 				scaledWidth = (iconSize * (width.toFloat() / height)).toInt()
 			}
-			return Bitmap.createScaledBitmap(origin, scaledWidth, scaledHeight, false)
+			return origin.scale(scaledWidth, scaledHeight, false)
 		} else {
 			return origin
 		}
@@ -705,7 +704,7 @@ class MaterialEditTextK : AppCompatEditText {
 	 */
 	fun setAccentTypeface(accentTypeface: Typeface?) {
 		this.accentTypeface = accentTypeface
-		textPaint.setTypeface(accentTypeface)
+		textPaint.typeface = accentTypeface
 		postInvalidate()
 	}
 
@@ -1374,17 +1373,17 @@ class MaterialEditTextK : AppCompatEditText {
 					else -> baseColor and 0x00ffffff or 0x44000000
 				}
 
-				canvas.save()
-				val translateX = if (isRTL) {
-					(endX - layout.width).toFloat()
-				} else {
-					(startX + bottomTextLeftOffset).toFloat()
-				}
-				val translateY = (lineStartY + bottomSpacing - bottomTextPadding)
+				canvas.withSave {
+					val translateX = if (isRTL) {
+						(endX - layout.width).toFloat()
+					} else {
+						(startX + bottomTextLeftOffset).toFloat()
+					}
+					val translateY = (lineStartY + bottomSpacing - bottomTextPadding)
 
-				canvas.translate(translateX, translateY)
-				layout.draw(canvas)
-				canvas.restore()
+					translate(translateX, translateY)
+					layout.draw(this)
+				}
 			}
 		}
 
@@ -1577,14 +1576,6 @@ class MaterialEditTextK : AppCompatEditText {
 		val buttonTop = scrollY + height - paddingBottom + bottomSpacing - iconOuterHeight
 
 		return (x >= buttonLeft && x <= buttonLeft + iconOuterWidth) && (y >= buttonTop && y <= buttonTop + iconOuterHeight)
-//		val startX: Int =
-//			scrollX + (if (iconLeftBitmaps == null) 0 else (iconOuterWidth + iconPadding))
-//		val endX: Int =
-//			scrollX + (if (iconRightBitmaps == null) width else width - iconOuterWidth - iconPadding)
-//		val buttonLeft = if (isRTL) startX
-//		else endX - iconOuterWidth
-//		val buttonTop: Int = scrollY + height - paddingBottom + bottomSpacing - iconOuterHeight
-//		return (x >= buttonLeft && x < buttonLeft + iconOuterWidth && y >= buttonTop && y < buttonTop + iconOuterHeight)
 	}
 
 	private fun checkLength(text: CharSequence): Int {

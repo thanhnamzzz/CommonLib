@@ -9,6 +9,7 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import io.virgo_common.common_libs.R
+import androidx.core.content.withStyledAttributes
 
 class GradientBackgroundButton @JvmOverloads constructor(
 	context: Context,
@@ -29,26 +30,25 @@ class GradientBackgroundButton @JvmOverloads constructor(
 
 	init {
 		attrs?.let {
-			val typedArray =
-				context.obtainStyledAttributes(it, R.styleable.GradientBackgroundButton, 0, 0)
-			color1 = typedArray.getColor(R.styleable.GradientBackgroundButton_button_color1, 0)
-			color2 = typedArray.getColor(R.styleable.GradientBackgroundButton_button_color2, 0)
-			color3 = typedArray.getColor(R.styleable.GradientBackgroundButton_button_color3, 0)
-			color4 = typedArray.getColor(R.styleable.GradientBackgroundButton_button_color4, 0)
-			color5 = typedArray.getColor(R.styleable.GradientBackgroundButton_button_color5, 0)
-			radius =
-				typedArray.getDimension(R.styleable.GradientBackgroundButton_cornerRadius, 0f)
-			strokeWidth = typedArray.getDimensionPixelSize(
-				R.styleable.GradientBackgroundButton_strokeWidth,
-				0
-			)
-			strokeColor =
-				typedArray.getColor(R.styleable.GradientBackgroundButton_strokeColor, Color.BLACK)
-			rippleColor =
-				typedArray.getColor(R.styleable.GradientBackgroundButton_rippleColor, rippleColor)
-			val i = typedArray.getInt(R.styleable.GradientBackgroundButton_orientationColor, 6)
-			orientationGradient = convertOrientation(i)
-			typedArray.recycle()
+			context.withStyledAttributes(it, R.styleable.GradientBackgroundButton, 0, 0) {
+				color1 = getColor(R.styleable.GradientBackgroundButton_button_color1, 0)
+				color2 = getColor(R.styleable.GradientBackgroundButton_button_color2, 0)
+				color3 = getColor(R.styleable.GradientBackgroundButton_button_color3, 0)
+				color4 = getColor(R.styleable.GradientBackgroundButton_button_color4, 0)
+				color5 = getColor(R.styleable.GradientBackgroundButton_button_color5, 0)
+				radius =
+					getDimension(R.styleable.GradientBackgroundButton_cornerRadius, 0f)
+				strokeWidth = getDimensionPixelSize(
+					R.styleable.GradientBackgroundButton_strokeWidth,
+					0
+				)
+				strokeColor =
+					getColor(R.styleable.GradientBackgroundButton_strokeColor, Color.BLACK)
+				rippleColor =
+					getColor(R.styleable.GradientBackgroundButton_rippleColor, rippleColor)
+				val i = getInt(R.styleable.GradientBackgroundButton_orientationColor, 6)
+				orientationGradient = convertOrientation(i)
+			}
 		}
 		val ar = intArrayOf(color1, color2, color3, color4, color5)
 		colorsArray = ar.filter { it != 0 }.toIntArray()

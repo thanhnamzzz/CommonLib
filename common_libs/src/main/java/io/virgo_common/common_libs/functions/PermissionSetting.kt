@@ -9,6 +9,7 @@ import io.virgo_common.common_libs.extensions.isLLP22Plus
 import io.virgo_common.common_libs.extensions.isM23Plus
 import io.virgo_common.common_libs.extensions.isO26Plus
 import io.virgo_common.common_libs.extensions.isR30Plus
+import androidx.core.net.toUri
 
 fun Context.openAppSettings(resultLauncher: ActivityResultLauncher<Intent>) {
 	val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -20,7 +21,7 @@ fun Context.openAppSettings(resultLauncher: ActivityResultLauncher<Intent>) {
 fun Context.setAllFile(resultLauncher: ActivityResultLauncher<Intent>) {
 	if (isR30Plus()) {
 		val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
-			data = Uri.parse("package:$packageName")
+			data = "package:$packageName".toUri()
 		}
 		resultLauncher.launch(intent)
 	}
@@ -29,7 +30,7 @@ fun Context.setAllFile(resultLauncher: ActivityResultLauncher<Intent>) {
 fun Context.openAppSettingsDrawOverOtherApp(resultLauncher: ActivityResultLauncher<Intent>) {
 	if (isM23Plus()) {
 		val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION).apply {
-			data = Uri.parse("package:$packageName")
+			data = "package:$packageName".toUri()
 		}
 		resultLauncher.launch(intent)
 	}

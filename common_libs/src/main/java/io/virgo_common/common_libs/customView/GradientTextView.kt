@@ -8,6 +8,8 @@ import android.graphics.Shader
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatTextView
 import io.virgo_common.common_libs.R
+import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.toColorInt
 
 class GradientTextView @JvmOverloads constructor(
 	context: Context,
@@ -25,21 +27,21 @@ class GradientTextView @JvmOverloads constructor(
 
 	init {
 		attrs?.let {
-			val typedArray = context.obtainStyledAttributes(it, R.styleable.GradientTextView, 0, 0)
-			color1 = typedArray.getColor(R.styleable.GradientTextView_text_color1, 0)
-			color2 = typedArray.getColor(R.styleable.GradientTextView_text_color2, 0)
-			color3 = typedArray.getColor(R.styleable.GradientTextView_text_color3, 0)
-			color4 = typedArray.getColor(R.styleable.GradientTextView_text_color4, 0)
-			color5 = typedArray.getColor(R.styleable.GradientTextView_text_color5, 0)
-			val ar = intArrayOf(color1, color2, color3, color4, color5)
-			colors = ar.filter { a -> a != 0 }.toIntArray()
-			val i = typedArray.getInt(R.styleable.GradientTextView_orientationColorTextView, 0)
-			orientation = when (i) {
-				1 -> ColorOrientation.VERTICAL
-				2 -> ColorOrientation.DIAGONAL
-				else -> ColorOrientation.HORIZONTAL
+			context.withStyledAttributes(it, R.styleable.GradientTextView, 0, 0) {
+				color1 = getColor(R.styleable.GradientTextView_text_color1, 0)
+				color2 = getColor(R.styleable.GradientTextView_text_color2, 0)
+				color3 = getColor(R.styleable.GradientTextView_text_color3, 0)
+				color4 = getColor(R.styleable.GradientTextView_text_color4, 0)
+				color5 = getColor(R.styleable.GradientTextView_text_color5, 0)
+				val ar = intArrayOf(color1, color2, color3, color4, color5)
+				colors = ar.filter { a -> a != 0 }.toIntArray()
+				val i = getInt(R.styleable.GradientTextView_orientationColorTextView, 0)
+				orientation = when (i) {
+					1 -> ColorOrientation.VERTICAL
+					2 -> ColorOrientation.DIAGONAL
+					else -> ColorOrientation.HORIZONTAL
+				}
 			}
-			typedArray.recycle()
 		}
 		invalidateGradient()
 	}
@@ -53,7 +55,7 @@ class GradientTextView @JvmOverloads constructor(
 
 	/**For color list under code #RRGGBB*/
 	fun setGradientColors(colorStrings: Array<String>) {
-		this.colors = colorStrings.map { Color.parseColor(it) }.toIntArray()
+		this.colors = colorStrings.map { it.toColorInt() }.toIntArray()
 		invalidateGradient()
 		invalidate()
 	}

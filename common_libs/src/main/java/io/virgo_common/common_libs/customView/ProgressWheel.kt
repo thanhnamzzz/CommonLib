@@ -16,6 +16,7 @@ import io.virgo_common.common_libs.R
 import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class ProgressWheel : View {
 	private val barLength = 16
@@ -420,7 +421,7 @@ class ProgressWheel : View {
 
 	private fun runCallback() {
 		callback?.let {
-			val normalizedProgress = Math.round(mProgress * 100 / 360.0f).toFloat() / 100
+			val normalizedProgress = (mProgress * 100 / 360.0f).roundToInt().toFloat() / 100
 			it.onProgressUpdate(normalizedProgress)
 		}
 	}
@@ -477,25 +478,41 @@ class ProgressWheel : View {
 	}
 
 	public override fun onRestoreInstanceState(state: Parcelable) {
-		if (state !is WheelSavedState) {
-			super.onRestoreInstanceState(state)
-			return
-		} else {
-			super.onRestoreInstanceState(state.superState)
-			this.mProgress = state.mProgress
-			this.mTargetProgress = state.mTargetProgress
-			this.isSpinning = state.isSpinning
-			this.spinSpeed = state.spinSpeed
-			this.barWidth = state.barWidth
-			this.barColor = state.barColor
-			this.rimWidth = state.rimWidth
-			this.rimColor = state.rimColor
-			this.circleRadius = state.circleRadius
-			this.linearProgress = state.linearProgress
-			this.fillRadius = state.fillRadius
+		val wheelState = state as? WheelSavedState ?: return super.onRestoreInstanceState(state)
+		super.onRestoreInstanceState(wheelState.superState)
+		super.onRestoreInstanceState(wheelState.superState)
+		this.mProgress = wheelState.mProgress
+		this.mTargetProgress = wheelState.mTargetProgress
+		this.isSpinning = wheelState.isSpinning
+		this.spinSpeed = wheelState.spinSpeed
+		this.barWidth = wheelState.barWidth
+		this.barColor = wheelState.barColor
+		this.rimWidth = wheelState.rimWidth
+		this.rimColor = wheelState.rimColor
+		this.circleRadius = wheelState.circleRadius
+		this.linearProgress = wheelState.linearProgress
+		this.fillRadius = wheelState.fillRadius
 
-			this.lastTimeAnimated = SystemClock.uptimeMillis()
-		}
+		this.lastTimeAnimated = SystemClock.uptimeMillis()
+//		if (state !is WheelSavedState) {
+//			super.onRestoreInstanceState(state)
+//			return
+//		} else {
+//			super.onRestoreInstanceState(state.superState)
+//			this.mProgress = state.mProgress
+//			this.mTargetProgress = state.mTargetProgress
+//			this.isSpinning = state.isSpinning
+//			this.spinSpeed = state.spinSpeed
+//			this.barWidth = state.barWidth
+//			this.barColor = state.barColor
+//			this.rimWidth = state.rimWidth
+//			this.rimColor = state.rimColor
+//			this.circleRadius = state.circleRadius
+//			this.linearProgress = state.linearProgress
+//			this.fillRadius = state.fillRadius
+//
+//			this.lastTimeAnimated = SystemClock.uptimeMillis()
+//		}
 	}
 
 	var progress: Float

@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "io.virgo_common.common_libs"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 21

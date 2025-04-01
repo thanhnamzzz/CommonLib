@@ -10,6 +10,7 @@ import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import androidx.core.graphics.createBitmap
 
 fun Bitmap?.saveBitmapToJpgCache(context: Context, fileName: String): String? {
     val cacheDir: File = context.cacheDir
@@ -56,9 +57,7 @@ fun Bitmap.bitmapResize(newWidth: Int, newHeight: Int): Bitmap {
 
     // "RECREATE" THE NEW BITMAP
     val newBitmap = Bitmap.createBitmap(this, 0, 0, width, height, matrix, false)
-    val bitmap = Bitmap.createBitmap(
-        newWidth, newHeight, Bitmap.Config.ARGB_8888
-    )
+    val bitmap = createBitmap(newWidth, newHeight)
     val canvas = Canvas(bitmap)
     canvas.drawColor(Color.TRANSPARENT)
     canvas.drawBitmap(newBitmap, 0f, 0f, null)

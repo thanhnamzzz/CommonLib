@@ -5,17 +5,16 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.Settings
 import android.util.Log
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.activity.result.ActivityResultLauncher
 import androidx.core.content.FileProvider
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import java.io.File
+import androidx.core.net.toUri
 
 object GlobalFunction {
 
@@ -83,7 +82,7 @@ object GlobalFunction {
 
 	fun shareApp(activity: Activity) {
 		val intent = Intent(Intent.ACTION_SEND)
-		intent.setType("text/plain")
+		intent.type = "text/plain"
 		intent.putExtra(Intent.EXTRA_SUBJECT, "Check out this cool app!")
 		intent.putExtra(
 			Intent.EXTRA_TEXT,
@@ -100,7 +99,7 @@ object GlobalFunction {
 		}
 		val intent = Intent(
 			Intent.ACTION_VIEW,
-			Uri.parse(link)
+			link.toUri()
 		)
 		if (intent.resolveActivity(activity.packageManager) != null) activity.startActivity(intent)
 		else Log.d("Namzzz", "GlobalFunction: openPrivacyPolicy null")
@@ -131,18 +130,18 @@ object GlobalFunction {
 	}
 
 	fun versionApp(context: Context): String {
-		return context.packageManager.getPackageInfo(context.packageName, 0).versionName
+		return context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString()
 	}
 
 	fun openMarket(context: Context) {
 		try {
 			val intent =
-				Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${context.packageName}"))
+				Intent(Intent.ACTION_VIEW, "market://details?id=${context.packageName}".toUri())
 			context.startActivity(intent)
-		} catch (e: ActivityNotFoundException) {
+		} catch (_: ActivityNotFoundException) {
 			val intent = Intent(
 				Intent.ACTION_VIEW,
-				Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")
+				"https://play.google.com/store/apps/details?id=${context.packageName}".toUri()
 			)
 			context.startActivity(intent)
 		}
@@ -155,13 +154,13 @@ object GlobalFunction {
 		}
 		val devUrl = "https://play.google.com/store/apps/developer?id=$id"
 		val intent = Intent(Intent.ACTION_VIEW).apply {
-			data = Uri.parse(devUrl)
+			data = devUrl.toUri()
 			setPackage("com.android.vending")
 		}
 		try {
 			context.startActivity(intent)
-		} catch (e: ActivityNotFoundException) {
-			val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse(devUrl))
+		} catch (_: ActivityNotFoundException) {
+			val webIntent = Intent(Intent.ACTION_VIEW, devUrl.toUri())
 			context.startActivity(webIntent)
 		}
 	}

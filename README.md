@@ -28,6 +28,7 @@ dependencies {
 | `GradientTextView` | Gradient text view |
 | `StrokeTextView` | Stroke text view |
 | `ProgressWheel` | A custom progressbar |
+| `Material Edittext` | A custom Edittext with label, color, font |
 #### Extensions:
 Many extensions such as:
 - `Binding`: for class `SimpleActivity` và `SimpleFragment`

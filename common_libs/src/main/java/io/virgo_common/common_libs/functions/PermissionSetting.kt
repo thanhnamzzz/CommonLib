@@ -12,9 +12,9 @@ import io.virgo_common.common_libs.extensions.isR30Plus
 import androidx.core.net.toUri
 
 fun Context.openAppSettings(resultLauncher: ActivityResultLauncher<Intent>) {
-	val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-	val uri = Uri.fromParts("package", packageName, null)
-	intent.data = uri
+	val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+		data = Uri.fromParts("package", packageName, null)
+	}
 	resultLauncher.launch(intent)
 }
 
@@ -23,7 +23,9 @@ fun Context.setAllFile(resultLauncher: ActivityResultLauncher<Intent>) {
 		val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
 			data = "package:$packageName".toUri()
 		}
-		resultLauncher.launch(intent)
+		if (intent.resolveActivity(packageManager) != null)
+			resultLauncher.launch(intent)
+		else openAppSettings(resultLauncher)
 	}
 }
 

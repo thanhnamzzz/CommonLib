@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 fun Context.loadImage(
@@ -27,7 +26,6 @@ fun Context.loadImage(
 	CoroutineScope(Dispatchers.Main).launch(exception) {
 		Glide.with(this@loadImage).load(image).into(view)
 		complete(true, null)
-		cancel()
 	}
 }
 
@@ -42,7 +40,6 @@ fun Context.loadImage(
 	}
 	CoroutineScope(Dispatchers.Main).launch(exception) {
 		Glide.with(this@loadImage).load(image).into(view)
-		cancel()
 	}
 }
 
@@ -76,7 +73,6 @@ fun Context.loadImage(
 			ImageTrans.CIRCLE_CROP -> Glide.with(this@loadImage).load(image).circleCrop().into(view)
 		}
 		complete(true, null)
-		cancel()
 	}
 }
 
@@ -113,7 +109,6 @@ fun Context.loadImage(
 				).into(view)
 		}
 		complete(true, null)
-		cancel()
 	}
 }
 
@@ -155,6 +150,5 @@ fun Context.loadImage(
 				).into(view)
 		}
 		complete(true, null)
-		cancel()
 	}
 }

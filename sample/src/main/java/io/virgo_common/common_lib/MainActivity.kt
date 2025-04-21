@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.virgo_common.common_lib.databinding.ActivityMainBinding
+import io.virgo_common.common_lib.flowLayout.FlowLayoutActivity
+import io.virgo_common.common_lib.toolBar.ToolBarActivity
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 import io.virgo_common.common_libs.functions.GlobalFunction
 
@@ -41,6 +43,12 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 //		}
 		binding.btnOpenMaterialEdittext.setOnClickListener {
 			startActivity(Intent(this@MainActivity, MaterialEditTextActivity::class.java))
+		}
+		binding.btnOpenToolBar.setOnClickListener {
+			startActivity(Intent(this@MainActivity, ToolBarActivity::class.java))
+		}
+		binding.btnOpenFlowLayout.setOnClickListener {
+			startActivity(Intent(this@MainActivity, FlowLayoutActivity::class.java))
 		}
 
 //		binding.btnChangeLanguage.setOnClickListener {

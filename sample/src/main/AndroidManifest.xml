@@ -13,6 +13,12 @@
         android:theme="@style/Theme.CommonLib"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".flowLayout.FlowLayoutActivity"
+            android:exported="false" />
+        <activity
+            android:name=".toolBar.ToolBarActivity"
+            android:exported="false" />
+        <activity
             android:name=".MaterialEditTextActivity"
             android:exported="false"
             android:windowSoftInputMode="stateUnchanged" />

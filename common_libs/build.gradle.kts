@@ -33,10 +33,6 @@ android {
 	}
 
 	buildFeatures { viewBinding = true }
-
-	lint {
-		baseline = file("lint-baseline.xml")
-	}
 }
 
 publishing.publications {

@@ -119,7 +119,7 @@
         android:layout_height="@dimen/_200sdp"
         android:padding="@dimen/_15sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view_blur"
+        app:layout_constraintTop_toTopOf="parent"
         app:pw_barColor="@color/black"
         app:pw_barWidth="@dimen/_6sdp"
         app:pw_borderProgress="true"

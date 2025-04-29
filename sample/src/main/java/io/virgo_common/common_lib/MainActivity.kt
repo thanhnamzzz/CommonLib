@@ -10,6 +10,9 @@ import io.virgo_common.common_lib.databinding.ActivityMainBinding
 import io.virgo_common.common_lib.flowLayout.FlowLayoutActivity
 import io.virgo_common.common_lib.toolBar.ToolBarActivity
 import io.virgo_common.common_libs.baseApp.SimpleActivity
+import io.virgo_common.common_libs.blurView.RenderEffectBlur
+import io.virgo_common.common_libs.blurView.RenderScriptBlur
+import io.virgo_common.common_libs.extensions.isS31Plus
 import io.virgo_common.common_libs.functions.GlobalFunction
 
 class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -58,5 +61,16 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 //			val localeList = LocaleListCompat.forLanguageTags(key)
 //			AppCompatDelegate.setApplicationLocales(localeList)
 //		}
+
+		val float = 10f
+		val windowBackground = window.decorView.background
+		val algorithm = if (isS31Plus()) {
+			RenderEffectBlur()
+		} else RenderScriptBlur(this)
+		binding.viewBlur.setupWith(binding.root, algorithm)
+			.setFrameClearDrawable(windowBackground)
+			.setBlurRadius(float)
+			.setBlurAutoUpdate(true)
+			.setBlurEnabled(true)
 	}
 }

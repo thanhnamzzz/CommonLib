@@ -3,13 +3,18 @@ package io.virgo_common.common_libs.extensions
 import android.os.Build
 import androidx.annotation.ChecksSdkIntAtLeast
 
+@ChecksSdkIntAtLeast(api = Build.VERSION_CODES.VANILLA_ICE_CREAM)
+fun isVanilla35Plus(): Boolean {
+	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM
+}
+
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-fun isUpsideDownCakePlus(): Boolean {
+fun isUpsideDownCake34Plus(): Boolean {
 	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE
 }
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.TIRAMISU)
-fun isTiramisuPlus(): Boolean {
+fun isTiramisu33Plus(): Boolean {
 	return Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 }
 

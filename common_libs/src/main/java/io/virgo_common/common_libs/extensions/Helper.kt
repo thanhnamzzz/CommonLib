@@ -21,11 +21,3 @@ fun toastMess(activity: Activity, mess: String, duration: Int, typeToast: MyToas
         MyToast.TypeToast.TOAST_NONE -> MyToast.showToastNone(activity, mess, duration)
     }
 }
-
-fun Window.keepScreenOn() {
-    this.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-}
-
-fun Window.clearKeepScreenOn() {
-    this.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-}

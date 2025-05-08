@@ -3,6 +3,7 @@ package io.virgo_common.common_libs.extensions
 import android.view.View
 import android.view.Window
 import android.view.WindowInsetsController
+import android.view.WindowManager
 
 fun Window.updateStatusBarColors(backgroundColor: Int) {
     statusBarColor = backgroundColor
@@ -60,4 +61,12 @@ fun Window.updateNavigationBarForegroundColor(backgroundColor: Int) {
                 decorView.systemUiVisibility.removeBit(View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR)
         }
     }
+}
+
+fun Window.keepScreenOn() {
+    this.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+}
+
+fun Window.clearKeepScreenOn() {
+    this.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 }

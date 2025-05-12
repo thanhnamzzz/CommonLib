@@ -72,6 +72,7 @@ object GlobalFunction {
 
 		WindowInsetsControllerCompat(window, decorView).let { controller ->
 			controller.show(WindowInsetsCompat.Type.statusBars())
+			controller.hide(WindowInsetsCompat.Type.navigationBars())
 			controller.systemBarsBehavior =
 				WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 		}
@@ -82,6 +83,7 @@ object GlobalFunction {
 		WindowCompat.setDecorFitsSystemWindows(window, false)
 
 		WindowInsetsControllerCompat(window, decorView).let { controller ->
+			controller.hide(WindowInsetsCompat.Type.statusBars())
 			controller.show(WindowInsetsCompat.Type.navigationBars())
 			controller.systemBarsBehavior =
 				WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE

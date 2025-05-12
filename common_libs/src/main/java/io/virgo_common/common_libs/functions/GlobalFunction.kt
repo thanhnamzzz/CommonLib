@@ -66,6 +66,28 @@ object GlobalFunction {
 		}
 	}
 
+	fun showSystemStatusBar(window: Window) {
+		val decorView = window.decorView
+		WindowCompat.setDecorFitsSystemWindows(window, false)
+
+		WindowInsetsControllerCompat(window, decorView).let { controller ->
+			controller.show(WindowInsetsCompat.Type.statusBars())
+			controller.systemBarsBehavior =
+				WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+		}
+	}
+
+	fun showSystemNavigationBar(window: Window) {
+		val decorView = window.decorView
+		WindowCompat.setDecorFitsSystemWindows(window, false)
+
+		WindowInsetsControllerCompat(window, decorView).let { controller ->
+			controller.show(WindowInsetsCompat.Type.navigationBars())
+			controller.systemBarsBehavior =
+				WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+		}
+	}
+
 	fun hideKeyBoard(activity: Context, editText: EditText) {
 		editText.clearFocus()
 		val inputMethodManager =

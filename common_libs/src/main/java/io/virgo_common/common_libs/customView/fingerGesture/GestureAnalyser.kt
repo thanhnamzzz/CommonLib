@@ -6,7 +6,6 @@ import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-@Deprecated("Use GestureDetector")
 /**
  * Internal API class to analyse the recorded gestures.
  *

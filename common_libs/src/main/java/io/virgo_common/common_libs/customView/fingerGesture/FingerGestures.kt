@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.OnTouchListener
 import io.virgo_common.common_libs.customView.fingerGesture.GestureAnalyser.GestureType
 
-@Deprecated("Use GestureDetector")
 /**
  * @author championswimmer
  * @version 0.2
@@ -25,7 +24,7 @@ import io.virgo_common.common_libs.customView.fingerGesture.GestureAnalyser.Gest
  *
  */
 class FingerGestures : OnTouchListener {
-	private var debug = true
+	private var debug = false
 	var consumeTouchEvents: Boolean = false
 
 	protected var tracking: BooleanArray = booleanArrayOf(false, false, false, false, false)
@@ -321,7 +320,6 @@ class FingerGestures : OnTouchListener {
 		const val GESTURE_SPEED_MEDIUM: Long = 1000
 		const val GESTURE_SPEED_FAST: Long = 500
 
-		//        private const val TAG = "SimpleFingerGestures"
 		private const val TAG = "Namzzz"
 	}
 }

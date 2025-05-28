@@ -13,11 +13,13 @@ fun Window.updateStatusBarColors(backgroundColor: Int) {
 fun Window.updateStatusBarForegroundColor(backgroundColor: Int) {
     if (isR30Plus()) {
         if (backgroundColor.getContrastColor() == DARK_GREY) {
+            //Background is Dark -> set light text
             insetsController!!.setSystemBarsAppearance(
                 WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
                 WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
             )
         } else {
+            //Background is Light -> set dark text
             insetsController!!.setSystemBarsAppearance(
                 0,
                 WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS

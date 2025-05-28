@@ -1,7 +1,10 @@
 package io.virgo_common.common_libs.extensions
 
+import android.graphics.Color
 import android.graphics.Point
+import android.graphics.drawable.ColorDrawable
 import android.view.View
+import android.view.ViewGroup
 
 fun View.visibility() {
     visibility = View.VISIBLE
@@ -22,4 +25,8 @@ fun View.getPointLocation(): Point {
     point.x = location[0]
     point.y = location[1]
     return point
+}
+
+fun ViewGroup.getBackgroundColor(): Int {
+    return (background as? ColorDrawable)?.color ?: Color.TRANSPARENT
 }

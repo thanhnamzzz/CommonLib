@@ -3,8 +3,8 @@ package io.virgo_common.common_libs.extensions
 import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
+import android.util.TypedValue
 import android.view.View
-import android.view.ViewGroup
 
 fun View.visibility() {
     visibility = View.VISIBLE
@@ -27,6 +27,15 @@ fun View.getPointLocation(): Point {
     return point
 }
 
-fun ViewGroup.getBackgroundColor(): Int {
-    return (background as? ColorDrawable)?.color ?: Color.TRANSPARENT
+fun View.getBackgroundColor(): Int {
+    val bg = background
+    if (bg is ColorDrawable) return bg.color
+    // Nếu background null hoặc không phải ColorDrawable, lấy từ theme
+    val typedValue = TypedValue()
+    val resolved = context.theme.resolveAttribute(android.R.attr.windowBackground, typedValue, true)
+    return if (resolved && typedValue.type in TypedValue.TYPE_FIRST_COLOR_INT..TypedValue.TYPE_LAST_COLOR_INT) {
+        typedValue.data
+    } else {
+        Color.TRANSPARENT
+    }
 }

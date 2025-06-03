@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.Uri
 import android.util.Log
 import android.view.Window
@@ -15,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import java.io.File
 import androidx.core.net.toUri
+import io.virgo_common.common_libs.extensions.isM23Plus
 
 object GlobalFunction {
 
@@ -186,6 +189,23 @@ object GlobalFunction {
 		} catch (_: ActivityNotFoundException) {
 			val webIntent = Intent(Intent.ACTION_VIEW, devUrl.toUri())
 			context.startActivity(webIntent)
+		}
+	}
+
+	fun isConnectedInternet(context: Context): Boolean {
+		val connectivityManager =
+			context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+		return if (isM23Plus()) {
+			val network = connectivityManager.activeNetwork ?: return false
+			val networkCapabilities =
+				connectivityManager.getNetworkCapabilities(network) ?: return false
+			return networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+					networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+					networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+		} else {
+			val activeNetworkInfo = connectivityManager.activeNetworkInfo
+			return activeNetworkInfo != null && activeNetworkInfo.isConnected
 		}
 	}
 }

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="circle_corner">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="rounded_corner_r10">
+        <item name="cornerSize">@dimen/_10sdp</item>
+    </style>
+
+    <style name="rounded_corner_r30">
+        <item name="cornerSize">@dimen/_30sdp</item>
+    </style>
+
+    <style name="rounded_corner_r5">
+        <item name="cornerSize">@dimen/_5sdp</item>
+    </style>
+
+    <style name="rounded_top_r15">
+        <item name="cornerSizeTopLeft">@dimen/_15sdp</item>
+        <item name="cornerSizeTopRight">@dimen/_15sdp</item>
+    </style>
+
+    <style name="rounded_tr_bl_r15">
+        <item name="cornerSizeBottomLeft">@dimen/_15sdp</item>
+        <item name="cornerSizeTopRight">@dimen/_15sdp</item>
+    </style>
+
+    <style name="BottomRoundedCard" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">30dp</item>
+        <item name="cornerSizeBottomRight">30dp</item>
+    </style>
+</resources>

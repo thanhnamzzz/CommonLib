@@ -132,6 +132,7 @@ object GlobalFunction {
 		else Log.d("Namzzz", "GlobalFunction: openPrivacyPolicy null")
 	}
 
+	/** Khai báo provider ở manifest bắt buộc phải đặt `authorities="${applicationId}.provider"` */
 	fun shareFile(context: Context, file: File, fileDoesNotExists: () -> Unit) {
 		if (file.exists()) {
 			val uri: Uri =
@@ -147,13 +148,13 @@ object GlobalFunction {
 		}
 	}
 
-	fun Context.shareText(text: String) {
+	fun shareText(context: Context, text: String) {
 		val intent = Intent(Intent.ACTION_SEND).apply {
 			type = "text/plain"
 			putExtra(Intent.EXTRA_TEXT, text)
 		}
 		val chooser = Intent.createChooser(intent, "Share text via")
-		this.startActivity(chooser)
+		context.startActivity(chooser)
 	}
 
 	fun versionApp(context: Context): String {

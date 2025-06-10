@@ -76,6 +76,7 @@ class RenderScriptBlur(context: Context) : BlurAlgorithm {
 
 	override fun scaleFactor(): Float {
 		return BlurController.Companion.DEFAULT_SCALE_FACTOR
+//		return BlurController.Companion.DEFAULT_BLUR_RADIUS
 	}
 
 	override fun render(canvas: Canvas, bitmap: Bitmap) {

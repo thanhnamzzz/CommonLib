@@ -43,6 +43,7 @@ import androidx.core.graphics.withSave
 
 /**
  * Created by rengwuxian on 2015/1/8.
+ * https://github.com/rengwuxian/MaterialEditText
  */
 class MaterialMultiAutoCompleteTextViewK : AppCompatMultiAutoCompleteTextView {
 	/**

@@ -13,6 +13,9 @@
         android:theme="@style/Theme.CommonLib"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".blurView.BlurActivity"
+            android:exported="false" />
+        <activity
             android:name=".flowLayout.FlowLayoutActivity"
             android:exported="false" />
         <activity

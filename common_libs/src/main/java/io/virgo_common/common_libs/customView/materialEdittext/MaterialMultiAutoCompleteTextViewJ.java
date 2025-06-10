@@ -45,6 +45,7 @@ import io.virgo_common.common_libs.customView.materialEdittext.validation.METVal
 
 /**
  * Created by rengwuxian on 2015/1/8.
+ * https://github.com/rengwuxian/MaterialEditText
  */
 public class MaterialMultiAutoCompleteTextViewJ extends AppCompatMultiAutoCompleteTextView {
 

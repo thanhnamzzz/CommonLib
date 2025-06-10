@@ -1,23 +1,20 @@
-package io.virgo_common.common_lib.toolBar
+package io.virgo_common.common_lib.blurView
 
-import android.graphics.Color
 import android.os.Bundle
+import android.widget.SeekBar
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.DividerItemDecoration
-import io.virgo_common.common_lib.databinding.ActivityToolBarBinding
+import io.virgo_common.common_lib.R
+import io.virgo_common.common_lib.databinding.ActivityBlurBinding
+import io.virgo_common.common_lib.toolBar.ViewAdapter
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 import io.virgo_common.common_libs.blurView.RenderEffectBlur
 import io.virgo_common.common_libs.blurView.RenderScriptBlur
-import io.virgo_common.common_libs.extensions.getBackgroundColor
 import io.virgo_common.common_libs.extensions.isS31Plus
-import io.virgo_common.common_libs.extensions.updateNavigationBarForegroundColor
-import io.virgo_common.common_libs.extensions.updateStatusBarForegroundColor
 
-class ToolBarActivity : SimpleActivity<ActivityToolBarBinding>(ActivityToolBarBinding::inflate) {
-
+class BlurActivity : SimpleActivity<ActivityBlurBinding>(ActivityBlurBinding::inflate) {
 	private lateinit var viewAdapter: ViewAdapter
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
@@ -26,31 +23,16 @@ class ToolBarActivity : SimpleActivity<ActivityToolBarBinding>(ActivityToolBarBi
 		ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
 			val systemBars =
 				insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
-			binding.rvList.setPadding(
-				systemBars.left,
-				binding.appBar.height,
-				systemBars.right,
-				systemBars.bottom
-			)
-//			binding.appBar.setPadding(0, systemBars.top, 0, 0)
+			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
-		val color = binding.main.getBackgroundColor()
-		window.updateStatusBarForegroundColor(color)
-		window.navigationBarColor = Color.TRANSPARENT
-		window.updateNavigationBarForegroundColor(color)
 
 		viewAdapter = ViewAdapter(this)
 		val itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
 		binding.rvList.addItemDecoration(itemDecoration)
 		binding.rvList.adapter = viewAdapter
 
-//		binding.toolBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
-		binding.btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
-//		binding.nestedScroll.isNestedScrollingEnabled = false
-
-		val float = 2f
+		var float = 2f
 		val windowBackground = window.decorView.background
 		val algorithm = if (isS31Plus()) {
 			RenderEffectBlur()
@@ -58,7 +40,27 @@ class ToolBarActivity : SimpleActivity<ActivityToolBarBinding>(ActivityToolBarBi
 		binding.blurView.setupWith(binding.root, algorithm)
 			.setFrameClearDrawable(windowBackground)
 			.setBlurRadius(float)
-			.setBlurAutoUpdate(true)
+			.setBlurAutoUpdate(false)
 			.setBlurEnabled(true)
+
+		binding.seekbarBlur.progress = float.toInt()
+		binding.seekbarBlur.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+			override fun onProgressChanged(
+				p0: SeekBar?,
+				p1: Int,
+				p2: Boolean
+			) {
+				if (p1 > 0)
+					binding.blurView.setBlurRadius(p1.toFloat())
+			}
+
+			override fun onStartTrackingTouch(p0: SeekBar?) {
+
+			}
+
+			override fun onStopTrackingTouch(p0: SeekBar?) {
+
+			}
+		})
 	}
 }

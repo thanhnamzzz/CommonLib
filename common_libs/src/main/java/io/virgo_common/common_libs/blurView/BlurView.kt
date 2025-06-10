@@ -77,8 +77,7 @@ class BlurView : FrameLayout {
 	 * or (preferably) some of your layouts. The lower amount of Views are in the root, the better for performance.
 	 * @param algorithm sets the blur algorithm
 	 * @return [BlurView] to setup needed params.
-	 */
-	/**
+	 *
 	 * @param rootView root to start blur from.
 	 * Can be Activity's root content layout (android.R.id.content)
 	 * or (preferably) some of your layouts. The lower amount of Views are in the root, the better for performance.

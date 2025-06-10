@@ -41,16 +41,13 @@ public final class PreDrawBlurController implements BlurController {
     private final int[] rootLocation = new int[2];
     private final int[] blurViewLocation = new int[2];
 
-    private final ViewTreeObserver.OnPreDrawListener drawListener = new ViewTreeObserver.OnPreDrawListener() {
-        @Override
-        public boolean onPreDraw() {
-            // Not invalidating a View here, just updating the Bitmap.
-            // This relies on the HW accelerated bitmap drawing behavior in Android
-            // If the bitmap was drawn on HW accelerated canvas, it holds a reference to it and on next
-            // drawing pass the updated content of the bitmap will be rendered on the screen
-            updateBlur();
-            return true;
-        }
+    private final ViewTreeObserver.OnPreDrawListener drawListener = () -> {
+        // Not invalidating a View here, just updating the Bitmap.
+        // This relies on the HW accelerated bitmap drawing behavior in Android
+        // If the bitmap was drawn on HW accelerated canvas, it holds a reference to it and on next
+        // drawing pass the updated content of the bitmap will be rendered on the screen
+        updateBlur();
+        return true;
     };
 
     private boolean blurEnabled = true;
@@ -191,18 +188,21 @@ public final class PreDrawBlurController implements BlurController {
         initialized = false;
     }
 
+    @NonNull
     @Override
     public BlurViewFacade setBlurRadius(float radius) {
         this.blurRadius = radius;
         return this;
     }
 
+    @NonNull
     @Override
     public BlurViewFacade setFrameClearDrawable(@Nullable Drawable frameClearDrawable) {
         this.frameClearDrawable = frameClearDrawable;
         return this;
     }
 
+    @NonNull
     @Override
     public BlurViewFacade setBlurEnabled(boolean enabled) {
         this.blurEnabled = enabled;
@@ -211,6 +211,7 @@ public final class PreDrawBlurController implements BlurController {
         return this;
     }
 
+    @NonNull
     public BlurViewFacade setBlurAutoUpdate(final boolean enabled) {
         rootView.getViewTreeObserver().removeOnPreDrawListener(drawListener);
         blurView.getViewTreeObserver().removeOnPreDrawListener(drawListener);
@@ -224,6 +225,7 @@ public final class PreDrawBlurController implements BlurController {
         return this;
     }
 
+    @NonNull
     @Override
     public BlurViewFacade setOverlayColor(int overlayColor) {
         if (this.overlayColor != overlayColor) {

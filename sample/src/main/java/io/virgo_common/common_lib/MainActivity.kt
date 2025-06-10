@@ -2,10 +2,13 @@ package io.virgo_common.common_lib
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import io.virgo_common.common_lib.blurView.BlurActivity
 import io.virgo_common.common_lib.databinding.ActivityMainBinding
 import io.virgo_common.common_lib.flowLayout.FlowLayoutActivity
 import io.virgo_common.common_lib.toolBar.ToolBarActivity
@@ -53,6 +56,9 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 		binding.btnOpenFlowLayout.setOnClickListener {
 			startActivity(Intent(this@MainActivity, FlowLayoutActivity::class.java))
 		}
+		binding.btnOpenBlurLayout.setOnClickListener {
+			startActivity(Intent(this@MainActivity, BlurActivity::class.java))
+		}
 
 //		binding.btnChangeLanguage.setOnClickListener {
 //			val key = listKey[index]
@@ -72,5 +78,10 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 			.setBlurRadius(float)
 			.setBlurAutoUpdate(true)
 			.setBlurEnabled(true)
+
+		Handler(Looper.getMainLooper()).postDelayed(
+			{ binding.btnOpenBlurLayout.callOnClick() },
+			500
+		)
 	}
 }

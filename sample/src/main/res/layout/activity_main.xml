@@ -137,6 +137,12 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_open_blur_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open Blur Layout" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_open_flow_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

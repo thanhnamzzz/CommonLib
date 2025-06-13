@@ -136,6 +136,17 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <io.virgo_common.common_libs.customView.shimmerJ.ShimmerTextView
+            android:id="@+id/shimmer_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Test Shimmer TextView"
+            android:textColor="#9B9B9B"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:reflectionColor="#00E9FF" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_open_blur_layout"
             android:layout_width="wrap_content"

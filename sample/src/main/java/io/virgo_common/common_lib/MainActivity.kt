@@ -1,9 +1,8 @@
 package io.virgo_common.common_lib
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -15,6 +14,7 @@ import io.virgo_common.common_lib.toolBar.ToolBarActivity
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 import io.virgo_common.common_libs.blurView.RenderEffectBlur
 import io.virgo_common.common_libs.blurView.RenderScriptBlur
+import io.virgo_common.common_libs.customView.shimmerJ.Shimmer
 import io.virgo_common.common_libs.extensions.isS31Plus
 import io.virgo_common.common_libs.functions.GlobalFunction
 
@@ -79,9 +79,30 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 			.setBlurAutoUpdate(true)
 			.setBlurEnabled(true)
 
-		Handler(Looper.getMainLooper()).postDelayed(
-			{ binding.btnOpenBlurLayout.callOnClick() },
-			500
-		)
+		val shimmer = Shimmer().apply {
+			setRepeatCount(-1)
+			setDuration(1500)
+			setStartDelay(1000)
+			setDirection(Shimmer.ANIMATION_DIRECTION_RTL)
+			setAnimatorListener(object : Animator.AnimatorListener {
+				override fun onAnimationStart(p0: Animator) {
+
+				}
+
+				override fun onAnimationEnd(p0: Animator) {
+
+				}
+
+				override fun onAnimationCancel(p0: Animator) {
+
+				}
+
+				override fun onAnimationRepeat(p0: Animator) {
+
+				}
+			})
+		}
+//		val shimmer = Shimmer()
+		shimmer.start(binding.shimmerTv)
 	}
 }

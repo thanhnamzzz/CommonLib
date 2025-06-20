@@ -8,6 +8,7 @@ import android.renderscript.Allocation
 import android.renderscript.Element
 import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
+import androidx.annotation.FloatRange
 
 /**
  * Blur using RenderScript, processed on GPU when device drivers support it.
@@ -21,7 +22,8 @@ import android.renderscript.ScriptIntrinsicBlur
 class RenderScriptBlur(context: Context) : BlurAlgorithm {
 	private val paint = Paint(Paint.FILTER_BITMAP_FLAG)
 	private val renderScript: RenderScript = RenderScript.create(context)
-	private val blurScript: ScriptIntrinsicBlur = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
+	private val blurScript: ScriptIntrinsicBlur =
+		ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript))
 	private var outAllocation: Allocation? = null
 
 	private var lastBitmapWidth = -1
@@ -36,7 +38,10 @@ class RenderScriptBlur(context: Context) : BlurAlgorithm {
 	 * @param blurRadius blur radius (1..25)
 	 * @return blurred bitmap
 	 */
-	override fun blur(bitmap: Bitmap, blurRadius: Float): Bitmap? {
+	override fun blur(
+		bitmap: Bitmap,
+		@FloatRange(from = 1.0, to = 25.0) blurRadius: Float
+	): Bitmap? {
 		//Allocation will use the same backing array of pixels as bitmap if created with USAGE_SHARED flag
 		val inAllocation = Allocation.createFromBitmap(renderScript, bitmap)
 

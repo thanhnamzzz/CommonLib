@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "io.virgo_common.common_lib"
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 

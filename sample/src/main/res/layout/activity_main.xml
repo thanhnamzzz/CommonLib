@@ -136,7 +136,7 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <io.virgo_common.common_libs.customView.shimmerJ.ShimmerTextView
+        <io.virgo_common.common_libs.customView.shimmer.ShimmerTextView
             android:id="@+id/shimmer_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

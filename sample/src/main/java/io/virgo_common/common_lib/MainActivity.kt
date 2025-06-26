@@ -14,7 +14,7 @@ import io.virgo_common.common_lib.toolBar.ToolBarActivity
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 import io.virgo_common.common_libs.blurView.RenderEffectBlur
 import io.virgo_common.common_libs.blurView.RenderScriptBlur
-import io.virgo_common.common_libs.customView.shimmerJ.Shimmer
+import io.virgo_common.common_libs.customView.shimmer.Shimmer
 import io.virgo_common.common_libs.extensions.isS31Plus
 import io.virgo_common.common_libs.functions.GlobalFunction
 

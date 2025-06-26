@@ -1,4 +1,4 @@
-package io.virgo_common.common_libs.customView.shimmerJ;
+package io.virgo_common.common_libs.customView.shimmer;
 
 import android.content.Context;
 import android.content.res.ColorStateList;

@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,7 +17,6 @@ import io.virgo_common.common_libs.blurView.RenderEffectBlur
 import io.virgo_common.common_libs.blurView.RenderScriptBlur
 import io.virgo_common.common_libs.customView.shimmer.Shimmer
 import io.virgo_common.common_libs.extensions.isS31Plus
-import io.virgo_common.common_libs.functions.GlobalFunction
 
 class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 	private val listKey = listOf("en", "hi", "ja", "vi")
@@ -27,11 +27,16 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 		setContentView(binding.root)
 		ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
 			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+			v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
 			insets
 		}
 
-		GlobalFunction.hideSystemNavigationBar(window)
+		window.setFlags(
+			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+		)
+
+//		GlobalFunction.hideSystemNavigationBar(window)
 
 		Log.d("Namzzz", "MainActivity: onCreate")
 //		val currentLocales = AppCompatDelegate.getApplicationLocales()
@@ -46,10 +51,7 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 //			val language = currentLocale.language // Mã ngôn ngữ (vd: "en", "vi")
 //			val country = currentLocale.country // Mã quốc gia (vd: "US", "VN")
 //			Log.d("CurrentLocale", "Language: $language, Country: $country")
-//		}
-		binding.btnOpenMaterialEdittext.setOnClickListener {
-			startActivity(Intent(this@MainActivity, MaterialEditTextActivity::class.java))
-		}
+//		}}
 		binding.btnOpenToolBar.setOnClickListener {
 			startActivity(Intent(this@MainActivity, ToolBarActivity::class.java))
 		}

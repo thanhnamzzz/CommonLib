@@ -1,7 +1,9 @@
 package io.virgo_common.common_lib.flowLayout
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -25,6 +27,11 @@ class FlowLayoutActivity :
 			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
+
+		window.setFlags(
+			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+		)
 		lifecycleScope.launch {
 			initFlowLayout()
 		}

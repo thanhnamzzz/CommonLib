@@ -22,10 +22,6 @@
             android:name=".toolBar.ToolBarActivity"
             android:exported="false" />
         <activity
-            android:name=".MaterialEditTextActivity"
-            android:exported="false"
-            android:windowSoftInputMode="stateUnchanged" />
-        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -12,6 +12,8 @@ import io.virgo_common.common_lib.blurView.BlurActivity
 import io.virgo_common.common_lib.databinding.ActivityMainBinding
 import io.virgo_common.common_lib.flowLayout.FlowLayoutActivity
 import io.virgo_common.common_lib.toolBar.ToolBarActivity
+import io.virgo_common.common_libs.animationView.AnimationView
+import io.virgo_common.common_libs.animationView.Attention
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 import io.virgo_common.common_libs.blurView.RenderEffectBlur
 import io.virgo_common.common_libs.blurView.RenderScriptBlur
@@ -35,6 +37,12 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
 			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 		)
+		AnimationView().apply {
+			setAnimation(Attention().Ruberband(binding.gradientText))
+			isLoop(true)
+			setDelayLoop(2000)
+			start()
+		}
 
 //		GlobalFunction.hideSystemNavigationBar(window)
 

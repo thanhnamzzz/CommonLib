@@ -16,7 +16,7 @@
     <io.virgo_common.common_libs.blurView.BlurView
         android:id="@+id/blur_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_200sdp"
+        android:layout_height="@dimen/_100sdp"
         android:layout_marginTop="@dimen/_50sdp"
         app:blurOverlayColor="#4DEFEFEF" />
 

@@ -18,68 +18,76 @@ import androidx.annotation.RequiresApi
  */
 @RequiresApi(Build.VERSION_CODES.S)
 class RenderEffectBlur : BlurAlgorithm {
-	private val node = RenderNode("BlurViewNode")
+    private val node = RenderNode("BlurViewNode")
 
-	private var height = 0
-	private var width = 0
-	private var lastBlurRadius = 1f
+    private var height = 0
+    private var width = 0
+    private var lastBlurRadius = 1f
 
-	var fallbackAlgorithm: BlurAlgorithm? = null
-	private var context: Context? = null
+    private var fallbackAlgorithm: BlurAlgorithm? = null
+    private var context: Context? = null
 
-	override fun blur(bitmap: Bitmap, blurRadius: Float): Bitmap {
-		lastBlurRadius = blurRadius
+    override fun blur(bitmap: Bitmap, blurRadius: Float): Bitmap {
+        lastBlurRadius = blurRadius
 
-		if (bitmap.height != height || bitmap.width != width) {
-			height = bitmap.height
-			width = bitmap.width
-			node.setPosition(0, 0, width, height)
-		}
-		val canvas: Canvas = node.beginRecording()
-		canvas.drawBitmap(bitmap, 0f, 0f, null)
-		node.endRecording()
-		node.setRenderEffect(
-			RenderEffect.createBlurEffect(
-				blurRadius,
-				blurRadius,
-				Shader.TileMode.MIRROR
-			)
-		)
-		// returning not blurred bitmap, because the rendering relies on the RenderNode
-		return bitmap
-	}
+        if (bitmap.height != height || bitmap.width != width) {
+            height = bitmap.height
+            width = bitmap.width
+            node.setPosition(0, 0, width, height)
+        }
+        val canvas = node.beginRecording()
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        node.endRecording()
+        node.setRenderEffect(
+            RenderEffect.createBlurEffect(
+                blurRadius,
+                blurRadius,
+                Shader.TileMode.MIRROR
+            )
+        )
+        // returning not blurred bitmap, because the rendering relies on the RenderNode
+        return bitmap
+    }
 
-	override fun destroy() {
-		node.discardDisplayList()
-		if (fallbackAlgorithm != null) {
-			fallbackAlgorithm!!.destroy()
-		}
-	}
+    override fun destroy() {
+        node.discardDisplayList()
+        fallbackAlgorithm?.destroy()
+    }
 
-	override fun canModifyBitmap(): Boolean {
-		return true
-	}
+    override fun canModifyBitmap(): Boolean = true
 
-	override val supportedBitmapConfig: Bitmap.Config
-		get() = Bitmap.Config.ARGB_8888
+    override val supportedBitmapConfig: Bitmap.Config
+        get() = Bitmap.Config.ARGB_8888
 
-	override fun scaleFactor(): Float {
-		return BlurController.DEFAULT_SCALE_FACTOR
-	}
+    override fun scaleFactor(): Float = BlurController.DEFAULT_SCALE_FACTOR
 
-	override fun render(canvas: Canvas, bitmap: Bitmap) {
-		if (canvas.isHardwareAccelerated) {
-			canvas.drawRenderNode(node)
-		} else {
-			if (fallbackAlgorithm == null) {
-				fallbackAlgorithm = RenderScriptBlur(context!!)
-			}
-			fallbackAlgorithm!!.blur(bitmap, lastBlurRadius)
-			fallbackAlgorithm!!.render(canvas, bitmap)
-		}
-	}
+    override fun render(canvas: Canvas, bitmap: Bitmap) {
+        if (canvas.isHardwareAccelerated) {
+            canvas.drawRenderNode(node)
+        } else {
+//            if (fallbackAlgorithm == null) {
+//                fallbackAlgorithm = RenderScriptBlur(context!!)
+//            }
+//            fallbackAlgorithm!!.blur(bitmap, lastBlurRadius)
+//            fallbackAlgorithm!!.render(canvas, bitmap)
+            ensureFallback().apply {
+                blur(bitmap, lastBlurRadius)
+                render(canvas, bitmap)
+            }
+        }
+    }
 
-	fun setContext(context: Context) {
-		this.context = context
-	}
+    private fun ensureFallback(): BlurAlgorithm {
+        if (fallbackAlgorithm == null) {
+            context?.let {
+                fallbackAlgorithm = RenderScriptBlur(it)
+            } ?: throw IllegalStateException("Fallback algorithm requires context")
+        }
+        return fallbackAlgorithm!!
+    }
+
+
+    fun setContext(context: Context) {
+        this.context = context
+    }
 }

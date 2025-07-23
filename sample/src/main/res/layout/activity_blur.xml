@@ -1,30 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#8FFFD6"
     tools:context=".blurView.BlurActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_list"
+    <eightbitlab.com.blurview.BlurTarget
+        android:id="@+id/blur_target"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_height="match_parent">
 
-    <io.virgo_common.common_libs.blurView.BlurView
-        android:id="@+id/blur_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </eightbitlab.com.blurview.BlurTarget>
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blur_view_v3"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_100sdp"
-        android:layout_marginTop="@dimen/_50sdp"
-        app:blurOverlayColor="#4DEFEFEF" />
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/rounded"
+        android:elevation="10dp"
+        app:blurOverlayColor="#8BFFFFFF">
 
-    <SeekBar
-        android:id="@+id/seekbar_blur"
+        <SeekBar
+            android:id="@+id/seekbar_blur_v3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:max="30" />
+
+    </eightbitlab.com.blurview.BlurView>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_alignParentBottom="true"
-        android:max="30" />
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <io.virgo_common.common_libs.blurView.BlurView
+            android:id="@+id/blur_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+            android:layout_marginTop="@dimen/_50sdp"
+            app:blurOverlayColor="#4DEFEFEF" />
+
+        <SeekBar
+            android:id="@+id/seekbar_blur"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentBottom="true"
+            android:max="30" />
+
+    </RelativeLayout>
+
+</FrameLayout>

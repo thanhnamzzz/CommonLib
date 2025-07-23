@@ -65,11 +65,6 @@ class RenderEffectBlur : BlurAlgorithm {
         if (canvas.isHardwareAccelerated) {
             canvas.drawRenderNode(node)
         } else {
-//            if (fallbackAlgorithm == null) {
-//                fallbackAlgorithm = RenderScriptBlur(context!!)
-//            }
-//            fallbackAlgorithm!!.blur(bitmap, lastBlurRadius)
-//            fallbackAlgorithm!!.render(canvas, bitmap)
             ensureFallback().apply {
                 blur(bitmap, lastBlurRadius)
                 render(canvas, bitmap)

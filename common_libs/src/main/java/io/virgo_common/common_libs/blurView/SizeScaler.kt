@@ -1,7 +1,6 @@
 package io.virgo_common.common_libs.blurView
 
 import io.virgo_common.common_libs.blurView.SizeScaler.Companion.ROUNDING_VALUE
-import java.lang.Float
 import kotlin.Boolean
 import kotlin.Int
 import kotlin.math.ceil
@@ -43,6 +42,6 @@ class SizeScaler(private val scaleFactor: Float) {
     data class Size(
         val width: Int,
         val height: Int,
-        val scaleFactor: kotlin.Float,
+        val scaleFactor: Float,
     )
 }

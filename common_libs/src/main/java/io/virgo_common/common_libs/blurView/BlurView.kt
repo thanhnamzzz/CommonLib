@@ -75,7 +75,7 @@ class BlurView @JvmOverloads constructor(
     @JvmOverloads
     fun setupWith(
         rootView: ViewGroup,
-        algorithm: BlurAlgorithm? = blurAlgorithm,
+        algorithm: BlurAlgorithm = blurAlgorithm,
     ): BlurViewFacade {
         blurController.destroy()
         blurController = PreDrawBlurController(this, rootView, overlayColor, algorithm)

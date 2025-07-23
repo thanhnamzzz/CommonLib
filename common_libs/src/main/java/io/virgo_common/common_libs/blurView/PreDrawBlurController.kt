@@ -1,237 +1,223 @@
-package io.virgo_common.common_libs.blurView;
+package io.virgo_common.common_libs.blurView
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import androidx.annotation.ColorInt
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.withSave
+import androidx.core.graphics.withScale
 
 /**
  * Blur Controller that handles all blur logic for the attached View.
  * It honors View size changes, View animation and Visibility changes.
- * <p>
+ *
+ *
  * The basic idea is to draw the view hierarchy on a bitmap, excluding the attached View,
  * then blur and draw it on the system Canvas.
- * <p>
- * It uses {@link ViewTreeObserver.OnPreDrawListener} to detect when
+ *
+ *
+ * It uses [ViewTreeObserver.OnPreDrawListener] to detect when
  * blur should be updated.
- * <p>
+ *
+ *
  */
-public final class PreDrawBlurController implements BlurController {
+class PreDrawBlurController(
+    val blurView: View,
+    private val rootView: ViewGroup,
+    @param:ColorInt private var overlayColor: Int,
+    private val blurAlgorithm: BlurAlgorithm,
+) : BlurController {
 
-    @ColorInt
-    public static final int TRANSPARENT = 0;
+    companion object {
+        @ColorInt
+        const val TRANSPARENT: Int = 0
+    }
 
-    private float blurRadius = DEFAULT_BLUR_RADIUS;
+    private var blurRadius = BlurController.Companion.DEFAULT_BLUR_RADIUS
 
-    private final BlurAlgorithm blurAlgorithm;
-    private BlurViewCanvas internalCanvas;
-    private Bitmap internalBitmap;
+    private var internalCanvas: BlurViewCanvas? = null
+    private var internalBitmap: Bitmap? = null
 
-    @SuppressWarnings("WeakerAccess")
-    final View blurView;
-    private int overlayColor;
-    private final ViewGroup rootView;
-    private final int[] rootLocation = new int[2];
-    private final int[] blurViewLocation = new int[2];
+    private val rootLocation = IntArray(2)
+    private val blurViewLocation = IntArray(2)
 
-    private final ViewTreeObserver.OnPreDrawListener drawListener = () -> {
+    private val drawListener = ViewTreeObserver.OnPreDrawListener {
         // Not invalidating a View here, just updating the Bitmap.
         // This relies on the HW accelerated bitmap drawing behavior in Android
         // If the bitmap was drawn on HW accelerated canvas, it holds a reference to it and on next
         // drawing pass the updated content of the bitmap will be rendered on the screen
-        updateBlur();
-        return true;
-    };
+        updateBlur()
+        true
+    }
 
-    private boolean blurEnabled = true;
-    private boolean initialized;
+    private var blurEnabled = true
+    private var initialized = false
 
-    @Nullable
-    private Drawable frameClearDrawable;
+    private var frameClearDrawable: Drawable? = null
 
     /**
      * @param blurView  View which will draw it's blurred underlying content
      * @param rootView  Root View where blurView's underlying content starts drawing.
-     *                  Can be Activity's root content layout (android.R.id.content)
-     * @param algorithm sets the blur algorithm
+     * Can be Activity's root content layout (android.R.id.content)
+     * @param blurAlgorithm sets the blur algorithm
      */
-    public PreDrawBlurController(@NonNull View blurView, @NonNull ViewGroup rootView, @ColorInt int overlayColor, BlurAlgorithm algorithm) {
-        this.rootView = rootView;
-        this.blurView = blurView;
-        this.overlayColor = overlayColor;
-        this.blurAlgorithm = algorithm;
-        if (algorithm instanceof RenderEffectBlur) {
+    init {
+        if (blurAlgorithm is RenderEffectBlur) {
             // noinspection NewApi
-            ((RenderEffectBlur) algorithm).setContext(blurView.getContext());
+            blurAlgorithm.setContext(blurView.context)
         }
 
-        int measuredWidth = blurView.getMeasuredWidth();
-        int measuredHeight = blurView.getMeasuredHeight();
+        val measuredWidth = blurView.measuredWidth
+        val measuredHeight = blurView.measuredHeight
 
-        init(measuredWidth, measuredHeight);
+        init(measuredWidth, measuredHeight)
     }
 
-    @SuppressWarnings("WeakerAccess")
-    void init(int measuredWidth, int measuredHeight) {
-        setBlurAutoUpdate(true);
-        SizeScaler sizeScaler = new SizeScaler(blurAlgorithm.scaleFactor());
+    fun init(measuredWidth: Int, measuredHeight: Int) {
+        setBlurAutoUpdate(true)
+        val sizeScaler = SizeScaler(blurAlgorithm.scaleFactor())
         if (sizeScaler.isZeroSized(measuredWidth, measuredHeight)) {
             // Will be initialized later when the View reports a size change
-            blurView.setWillNotDraw(true);
-            return;
+            blurView.setWillNotDraw(true)
+            return
         }
 
-        blurView.setWillNotDraw(false);
-        SizeScaler.Size bitmapSize = sizeScaler.scale(measuredWidth, measuredHeight);
-        internalBitmap = Bitmap.createBitmap(bitmapSize.getWidth(), bitmapSize.getHeight(), blurAlgorithm.getSupportedBitmapConfig());
-        internalCanvas = new BlurViewCanvas(internalBitmap);
-        initialized = true;
+        blurView.setWillNotDraw(false)
+        val bitmapSize = sizeScaler.scale(measuredWidth, measuredHeight)
+        internalBitmap = createBitmap(bitmapSize.width, bitmapSize.height, blurAlgorithm.supportedBitmapConfig)
+        internalCanvas = BlurViewCanvas(internalBitmap!!)
+        initialized = true
         // Usually it's not needed, because `onPreDraw` updates the blur anyway.
         // But it handles cases when the PreDraw listener is attached to a different Window, for example
         // when the BlurView is in a Dialog window, but the root is in the Activity.
         // Previously it was done in `draw`, but it was causing potential side effects and Jetpack Compose crashes
-        updateBlur();
+        updateBlur()
     }
 
-    @SuppressWarnings("WeakerAccess")
-    void updateBlur() {
+    fun updateBlur() {
         if (!blurEnabled || !initialized) {
-            return;
+            return
         }
 
         if (frameClearDrawable == null) {
-            internalBitmap.eraseColor(Color.TRANSPARENT);
+            internalBitmap?.eraseColor(Color.TRANSPARENT)
         } else {
-            frameClearDrawable.draw(internalCanvas);
+            frameClearDrawable?.draw(internalCanvas!!)
         }
 
-        internalCanvas.save();
-        setupInternalCanvasMatrix();
-        rootView.draw(internalCanvas);
-        internalCanvas.restore();
+        internalCanvas?.withSave {
+            setupInternalCanvasMatrix()
+            rootView.draw(internalCanvas!!)
+            internalCanvas
+        }
 
-        blurAndSave();
+        blurAndSave()
     }
 
     /**
      * Set up matrix to draw starting from blurView's position
      */
-    private void setupInternalCanvasMatrix() {
-        rootView.getLocationOnScreen(rootLocation);
-        blurView.getLocationOnScreen(blurViewLocation);
+    private fun setupInternalCanvasMatrix() {
+        rootView.getLocationOnScreen(rootLocation)
+        blurView.getLocationOnScreen(blurViewLocation)
 
-        int left = blurViewLocation[0] - rootLocation[0];
-        int top = blurViewLocation[1] - rootLocation[1];
+        val left = blurViewLocation[0] - rootLocation[0]
+        val top = blurViewLocation[1] - rootLocation[1]
 
         // https://github.com/Dimezis/BlurView/issues/128
-        float scaleFactorH = (float) blurView.getHeight() / internalBitmap.getHeight();
-        float scaleFactorW = (float) blurView.getWidth() / internalBitmap.getWidth();
+        val scaleFactorH = blurView.height.toFloat() / (internalBitmap?.height ?: 1)
+        val scaleFactorW = blurView.width.toFloat() / (internalBitmap?.width ?: 1)
 
-        float scaledLeftPosition = -left / scaleFactorW;
-        float scaledTopPosition = -top / scaleFactorH;
+        val scaledLeftPosition = -left / scaleFactorW
+        val scaledTopPosition = -top / scaleFactorH
 
-        internalCanvas.translate(scaledLeftPosition, scaledTopPosition);
-        internalCanvas.scale(1 / scaleFactorW, 1 / scaleFactorH);
+        internalCanvas?.translate(scaledLeftPosition, scaledTopPosition)
+        internalCanvas?.scale(1 / scaleFactorW, 1 / scaleFactorH)
     }
 
-    @Override
-    public boolean draw(Canvas canvas) {
-        if (!blurEnabled || !initialized) {
-            return true;
-        }
+    override fun draw(canvas: Canvas?): Boolean {
+        if (!blurEnabled || !initialized) return true
         // Not blurring itself or other BlurViews to not cause recursive draw calls
         // Related: https://github.com/Dimezis/BlurView/issues/110
-        if (canvas instanceof BlurViewCanvas) {
-            return false;
-        }
+        if (canvas is BlurViewCanvas) return false
 
         // https://github.com/Dimezis/BlurView/issues/128
-        float scaleFactorH = (float) blurView.getHeight() / internalBitmap.getHeight();
-        float scaleFactorW = (float) blurView.getWidth() / internalBitmap.getWidth();
+        val scaleFactorH = blurView.height.toFloat() / (internalBitmap?.height ?: 1)
+        val scaleFactorW = blurView.width.toFloat() / (internalBitmap?.width ?: 1)
 
-        canvas.save();
-        canvas.scale(scaleFactorW, scaleFactorH);
-        blurAlgorithm.render(canvas, internalBitmap);
-        canvas.restore();
+        canvas?.withScale(scaleFactorW, scaleFactorH) {
+            blurAlgorithm.render(this, internalBitmap!!)
+        }
         if (overlayColor != TRANSPARENT) {
-            canvas.drawColor(overlayColor);
+            canvas?.drawColor(overlayColor)
         }
-        return true;
+        return true
     }
 
-    private void blurAndSave() {
-        internalBitmap = blurAlgorithm.blur(internalBitmap, blurRadius);
-        if (!blurAlgorithm.canModifyBitmap()) {
-            internalCanvas.setBitmap(internalBitmap);
-        }
-    }
-
-    @Override
-    public void updateBlurViewSize() {
-        int measuredWidth = blurView.getMeasuredWidth();
-        int measuredHeight = blurView.getMeasuredHeight();
-
-        init(measuredWidth, measuredHeight);
-    }
-
-    @Override
-    public void destroy() {
-        setBlurAutoUpdate(false);
-        blurAlgorithm.destroy();
-        initialized = false;
-    }
-
-    @NonNull
-    @Override
-    public BlurViewFacade setBlurRadius(float radius) {
-        this.blurRadius = radius;
-        return this;
-    }
-
-    @NonNull
-    @Override
-    public BlurViewFacade setFrameClearDrawable(@Nullable Drawable frameClearDrawable) {
-        this.frameClearDrawable = frameClearDrawable;
-        return this;
-    }
-
-    @NonNull
-    @Override
-    public BlurViewFacade setBlurEnabled(boolean enabled) {
-        this.blurEnabled = enabled;
-        setBlurAutoUpdate(enabled);
-        blurView.invalidate();
-        return this;
-    }
-
-    @NonNull
-    public BlurViewFacade setBlurAutoUpdate(final boolean enabled) {
-        rootView.getViewTreeObserver().removeOnPreDrawListener(drawListener);
-        blurView.getViewTreeObserver().removeOnPreDrawListener(drawListener);
-        if (enabled) {
-            rootView.getViewTreeObserver().addOnPreDrawListener(drawListener);
-            // Track changes in the blurView window too, for example if it's in a bottom sheet dialog
-            if (rootView.getWindowId() != blurView.getWindowId()) {
-                blurView.getViewTreeObserver().addOnPreDrawListener(drawListener);
+    private fun blurAndSave() {
+        internalBitmap?.let {
+            val blurred = blurAlgorithm.blur(it, blurRadius)
+            internalBitmap = blurred
+            if (!blurAlgorithm.canModifyBitmap()) {
+                internalCanvas?.setBitmap(blurred)
             }
         }
-        return this;
+
     }
 
-    @NonNull
-    @Override
-    public BlurViewFacade setOverlayColor(int overlayColor) {
-        if (this.overlayColor != overlayColor) {
-            this.overlayColor = overlayColor;
-            blurView.invalidate();
+    override fun updateBlurViewSize() {
+        val measuredWidth = blurView.measuredWidth
+        val measuredHeight = blurView.measuredHeight
+
+        init(measuredWidth, measuredHeight)
+    }
+
+    override fun destroy() {
+        setBlurAutoUpdate(false)
+        blurAlgorithm.destroy()
+        initialized = false
+    }
+
+    override fun setBlurRadius(radius: Float): BlurViewFacade {
+        this.blurRadius = radius
+        return this
+    }
+
+    override fun setFrameClearDrawable(frameClearDrawable: Drawable?): BlurViewFacade {
+        this.frameClearDrawable = frameClearDrawable
+        return this
+    }
+
+    override fun setBlurEnabled(enabled: Boolean): BlurViewFacade {
+        this.blurEnabled = enabled
+        setBlurAutoUpdate(enabled)
+        blurView.invalidate()
+        return this
+    }
+
+    override fun setBlurAutoUpdate(enabled: Boolean): BlurViewFacade {
+        rootView.viewTreeObserver.removeOnPreDrawListener(drawListener)
+        blurView.viewTreeObserver.removeOnPreDrawListener(drawListener)
+        if (enabled) {
+            rootView.viewTreeObserver.addOnPreDrawListener(drawListener)
+            // Track changes in the blurView window too, for example if it's in a bottom sheet dialog
+            if (rootView.windowId !== blurView.windowId) {
+                blurView.viewTreeObserver.addOnPreDrawListener(drawListener)
+            }
         }
-        return this;
+        return this
+    }
+
+    override fun setOverlayColor(overlayColor: Int): BlurViewFacade {
+        if (this.overlayColor != overlayColor) {
+            this.overlayColor = overlayColor
+            blurView.invalidate()
+        }
+        return this
     }
 }

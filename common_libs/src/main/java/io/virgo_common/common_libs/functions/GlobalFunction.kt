@@ -197,7 +197,7 @@ object GlobalFunction {
 		val connectivityManager =
 			context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-		return if (isM23Plus()) {
+		if (isM23Plus()) {
 			val network = connectivityManager.activeNetwork ?: return false
 			val networkCapabilities =
 				connectivityManager.getNetworkCapabilities(network) ?: return false

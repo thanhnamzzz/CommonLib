@@ -14,6 +14,10 @@ dependencies {
   implementation 'com.github.thanhnamzzz:CommonLib:last-version'
 }
 ```
+
+## Update 5.1: BlurView
+How to use it? Please refer to the sample - `BlurActivity`.
+
 # Feature
 #### BaseApp:
 | Class | Description |

@@ -68,8 +68,7 @@ Many extensions such as:
 - `MyToast`: a custom layout for Toast.
 - `ThemeApp`: functions for setting the app theme (night mode, light mode)
 
-# Update 5.0: AnimationView
-## Usage
+## Update 5.0: AnimationView
 ### Java
 #### Import render animations
 
@@ -96,13 +95,13 @@ animationView.start();
 ### Kotlin
 #### Import render animations
 
-```java
+```kotlin
 import io.virgo_common.common_libs.animationView.AnimationView
 ```
 
 #### Start animation
 
-```java
+```kotlin
 // Declare TextView
 val textView: TextView = findViewById(R.id.TextView)
 

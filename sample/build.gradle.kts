@@ -48,5 +48,4 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
 
     implementation(project(":common_libs"))
-    implementation("com.github.Dimezis:BlurView:version-3.0.0")
 }

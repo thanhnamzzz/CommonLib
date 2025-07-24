@@ -3,8 +3,9 @@ package io.virgo_common.common_libs.customView.shimmer;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.os.Build;
 import android.view.View;
+
+import androidx.annotation.NonNull;
 
 /**
  * Shimmer
@@ -93,67 +94,55 @@ public class Shimmer {
             return;
         }
 
-        final Runnable animate = new Runnable() {
-            @Override
-            public void run() {
+        final Runnable animate = () -> {
 
-                shimmerView.setShimmering(true);
+            shimmerView.setShimmering(true);
 
-                float fromX = 0;
-                float toX = shimmerView.getWidth();
-                if (direction == ANIMATION_DIRECTION_RTL) {
-                    fromX = shimmerView.getWidth();
-                    toX = 0;
-                }
-
-                animator = ObjectAnimator.ofFloat(shimmerView, "gradientX", fromX, toX);
-                animator.setRepeatCount(repeatCount);
-                animator.setDuration(duration);
-                animator.setStartDelay(startDelay);
-                animator.addListener(new Animator.AnimatorListener() {
-                    @Override
-                    public void onAnimationStart(Animator animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        shimmerView.setShimmering(false);
-
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                            shimmerView.postInvalidate();
-                        } else {
-                            shimmerView.postInvalidateOnAnimation();
-                        }
-
-                        animator = null;
-                    }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animator animation) {
-
-                    }
-                });
-
-                if (animatorListener != null) {
-                    animator.addListener(animatorListener);
-                }
-
-                animator.start();
+            float fromX = 0;
+            float toX = shimmerView.getWidth();
+            if (direction == ANIMATION_DIRECTION_RTL) {
+                fromX = shimmerView.getWidth();
+                toX = 0;
             }
+
+            animator = ObjectAnimator.ofFloat(shimmerView, "gradientX", fromX, toX);
+            animator.setRepeatCount(repeatCount);
+            animator.setDuration(duration);
+            animator.setStartDelay(startDelay);
+            animator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(@NonNull Animator animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(@NonNull Animator animation) {
+                    shimmerView.setShimmering(false);
+
+                    shimmerView.postInvalidateOnAnimation();
+
+                    animator = null;
+                }
+
+                @Override
+                public void onAnimationCancel(@NonNull Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(@NonNull Animator animation) {
+
+                }
+            });
+
+            if (animatorListener != null) {
+                animator.addListener(animatorListener);
+            }
+
+            animator.start();
         };
 
         if (!shimmerView.isSetUp()) {
-            shimmerView.setAnimationSetupCallback(new ShimmerViewHelper.AnimationSetupCallback() {
-                @Override
-                public void onSetupAnimation(final View target) {
-                    animate.run();
-                }
-            });
+            shimmerView.setAnimationSetupCallback(target -> animate.run());
         } else {
             animate.run();
         }

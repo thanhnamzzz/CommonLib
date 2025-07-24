@@ -1,3 +1,5 @@
+/* Clone from https://github.com/Dimezis/BlurView */
+
 package io.virgo_common.common_libs.blurView
 
 import android.graphics.Bitmap

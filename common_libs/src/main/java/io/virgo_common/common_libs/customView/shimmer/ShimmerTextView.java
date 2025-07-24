@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
 /**
@@ -49,12 +50,12 @@ public class ShimmerTextView extends AppCompatTextView implements ShimmerViewBas
 
     @Override
     public boolean isShimmering() {
-        return shimmerViewHelper.isShimmering();
+        return shimmerViewHelper.isShimmering;
     }
 
     @Override
     public void setShimmering(boolean isShimmering) {
-        shimmerViewHelper.setShimmering(isShimmering);
+        shimmerViewHelper.isShimmering = isShimmering;
     }
 
     @Override
@@ -63,7 +64,7 @@ public class ShimmerTextView extends AppCompatTextView implements ShimmerViewBas
     }
 
     @Override
-    public void setAnimationSetupCallback(ShimmerViewHelper.AnimationSetupCallback callback) {
+    public void setAnimationSetupCallback(@NonNull ShimmerViewHelper.AnimationSetupCallback callback) {
         shimmerViewHelper.setAnimationSetupCallback(callback);
     }
 
@@ -117,5 +118,10 @@ public class ShimmerTextView extends AppCompatTextView implements ShimmerViewBas
             shimmerViewHelper.onDraw();
         }
         super.onDraw(canvas);
+    }
+
+    @Override
+    public void setSetUp(boolean b) {
+
     }
 }

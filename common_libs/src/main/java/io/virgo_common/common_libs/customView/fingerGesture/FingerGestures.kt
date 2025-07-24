@@ -27,7 +27,7 @@ class FingerGestures : OnTouchListener {
 	private var debug = false
 	var consumeTouchEvents: Boolean = false
 
-	protected var tracking: BooleanArray = booleanArrayOf(false, false, false, false, false)
+	private var tracking: BooleanArray = booleanArrayOf(false, false, false, false, false)
 	private var ga: GestureAnalyser
 	private var onFingerGestureListener: OnFingerGestureListener? = null
 
@@ -54,17 +54,15 @@ class FingerGestures : OnTouchListener {
 
 	override fun onTouch(view: View, ev: MotionEvent): Boolean {
 		view.performClick()
-		if (debug) Log.d(TAG, "onTouch")
+		if (debug) Log.d(TAG, "onTouch ${ev.actionMasked}")
 		when (ev.action and MotionEvent.ACTION_MASK) {
 			MotionEvent.ACTION_DOWN -> {
-				if (debug) Log.d(TAG, "ACTION_DOWN")
 				startTracking(0)
 				ga.trackGesture(ev)
 				return consumeTouchEvents
 			}
 
 			MotionEvent.ACTION_UP -> {
-				if (debug) Log.d(TAG, "ACTION_UP")
 				if (tracking[0]) {
 					doCallBack(ga.getGesture(ev))
 				}
@@ -91,12 +89,10 @@ class FingerGestures : OnTouchListener {
 			}
 
 			MotionEvent.ACTION_CANCEL -> {
-				if (debug) Log.d(TAG, "ACTION_CANCEL")
 				return true
 			}
 
 			MotionEvent.ACTION_MOVE -> {
-				if (debug) Log.d(TAG, "ACTION_MOVE")
 				return consumeTouchEvents
 			}
 		}

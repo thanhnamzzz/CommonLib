@@ -5,14 +5,10 @@ import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.DividerItemDecoration
 import io.virgo_common.common_lib.databinding.ActivityToolBarBinding
 import io.virgo_common.common_libs.baseApp.SimpleActivity
-import io.virgo_common.common_libs.blurView.RenderEffectBlur
-import io.virgo_common.common_libs.blurView.RenderScriptBlur
 import io.virgo_common.common_libs.extensions.getBackgroundColor
-import io.virgo_common.common_libs.extensions.isS31Plus
 import io.virgo_common.common_libs.extensions.updateNavigationBarForegroundColor
 import io.virgo_common.common_libs.extensions.updateStatusBarForegroundColor
 
@@ -49,16 +45,5 @@ class ToolBarActivity : SimpleActivity<ActivityToolBarBinding>(ActivityToolBarBi
 //		binding.toolBar.setNavigationOnClickListener { onBackPressedDispatcher.onBackPressed() }
 		binding.btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 //		binding.nestedScroll.isNestedScrollingEnabled = false
-
-		val float = 2f
-		val windowBackground = window.decorView.background
-		val algorithm = if (isS31Plus()) {
-			RenderEffectBlur()
-		} else RenderScriptBlur(this)
-		binding.blurView.setupWith(binding.root, algorithm)
-			.setFrameClearDrawable(windowBackground)
-			.setBlurRadius(float)
-			.setBlurAutoUpdate(true)
-			.setBlurEnabled(true)
 	}
 }

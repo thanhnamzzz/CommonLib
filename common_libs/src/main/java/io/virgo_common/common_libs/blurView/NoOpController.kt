@@ -1,3 +1,5 @@
+/* Clone from https://github.com/Dimezis/BlurView */
+
 package io.virgo_common.common_libs.blurView
 
 import android.graphics.Canvas
@@ -15,11 +17,11 @@ class NoOpController : BlurController {
 	override fun destroy() {
 	}
 
-	override fun setBlurRadius(radius: Float): BlurViewFacade {
+	override fun setBlurRadius(radius: Float): BlurViewFacade? {
 		return this
 	}
 
-	override fun setOverlayColor(overlayColor: Int): BlurViewFacade {
+	override fun setOverlayColor(overlayColor: Int): BlurViewFacade? {
 		return this
 	}
 
@@ -27,11 +29,11 @@ class NoOpController : BlurController {
 		return this
 	}
 
-	override fun setBlurEnabled(enabled: Boolean): BlurViewFacade {
+	override fun setBlurEnabled(enabled: Boolean): BlurViewFacade? {
 		return this
 	}
 
-	override fun setBlurAutoUpdate(enabled: Boolean): BlurViewFacade {
+	override fun setBlurAutoUpdate(enabled: Boolean): BlurViewFacade? {
 		return this
 	}
 }

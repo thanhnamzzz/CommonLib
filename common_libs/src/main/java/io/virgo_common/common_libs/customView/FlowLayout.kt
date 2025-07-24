@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.ViewGroup
+import androidx.core.content.withStyledAttributes
 import kotlin.math.max
 import kotlin.math.min
 import androidx.core.view.isGone
@@ -35,49 +36,42 @@ class FlowLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet
 	private val mChildNumForRow: MutableList<Int> = ArrayList()
 
 	init {
-		val a = context.theme.obtainStyledAttributes(
-			attrs, R.styleable.FlowLayout, 0, 0
-		)
-		try {
-			mFlow = a.getBoolean(R.styleable.FlowLayout_flFlow, DEFAULT_FLOW)
-			mChildSpacing = getDimensionOrInt(
-				a, R.styleable.FlowLayout_flChildSpacing, dpToPx(
-					DEFAULT_CHILD_SPACING.toFloat()
-				).toInt()
-			)
-			mMinChildSpacing = getDimensionOrInt(
-				a, R.styleable.FlowLayout_flMinChildSpacing, dpToPx(
-					DEFAULT_CHILD_SPACING.toFloat()
-				).toInt()
-			)
+		context.withStyledAttributes(attrs, R.styleable.FlowLayout, 0, 0) {
+			mFlow = getBoolean(R.styleable.FlowLayout_flFlow, DEFAULT_FLOW)
+
+			val defaultSpacing = dpToPx(DEFAULT_CHILD_SPACING.toFloat()).toInt()
+			mChildSpacing = getDimensionOrInt(R.styleable.FlowLayout_flChildSpacing, defaultSpacing)
+			mMinChildSpacing =
+				getDimensionOrInt(R.styleable.FlowLayout_flMinChildSpacing, defaultSpacing)
+
 			mChildSpacingForLastRow = getDimensionOrInt(
-				a,
 				R.styleable.FlowLayout_flChildSpacingForLastRow,
 				SPACING_UNDEFINED
 			)
+
 			mRowSpacing = getDimensionOrInt(
-				a, R.styleable.FlowLayout_flRowSpacing, dpToPx(
-					DEFAULT_ROW_SPACING
-				).toInt()
+				R.styleable.FlowLayout_flRowSpacing,
+				dpToPx(DEFAULT_ROW_SPACING).toInt()
 			).toFloat()
-			mMaxRows = a.getInt(R.styleable.FlowLayout_flMaxRows, DEFAULT_MAX_ROWS)
-			mRtl = a.getBoolean(R.styleable.FlowLayout_flRtl, DEFAULT_RTL)
-			mGravity = a.getInt(R.styleable.FlowLayout_android_gravity, UNSPECIFIED_GRAVITY)
+
+			mMaxRows = getInt(R.styleable.FlowLayout_flMaxRows, DEFAULT_MAX_ROWS)
+			mRtl = getBoolean(R.styleable.FlowLayout_flRtl, DEFAULT_RTL)
+			mGravity = getInt(R.styleable.FlowLayout_android_gravity, UNSPECIFIED_GRAVITY)
 			mRowVerticalGravity =
-				a.getInt(R.styleable.FlowLayout_flRowVerticalGravity, ROW_VERTICAL_GRAVITY_AUTO)
-		} finally {
-			a.recycle()
+				getInt(R.styleable.FlowLayout_flRowVerticalGravity, ROW_VERTICAL_GRAVITY_AUTO)
 		}
 	}
 
-	private fun getDimensionOrInt(a: TypedArray, index: Int, defValue: Int): Int {
+	private fun TypedArray.getDimensionOrInt(index: Int, defValue: Int): Int {
 		val tv = TypedValue()
-		a.getValue(index, tv)
-		return if (tv.type == TypedValue.TYPE_DIMENSION) {
-			a.getDimensionPixelSize(index, defValue)
-		} else {
-			a.getInt(index, defValue)
+		if (getValue(index, tv)) {
+			return if (tv.type == TypedValue.TYPE_DIMENSION) {
+				getDimensionPixelSize(index, defValue)
+			} else {
+				getInt(index, defValue)
+			}
 		}
+		return defValue
 	}
 
 	override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

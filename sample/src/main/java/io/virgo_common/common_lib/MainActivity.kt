@@ -15,7 +15,6 @@ import io.virgo_common.common_lib.toolBar.ToolBarActivity
 import io.virgo_common.common_libs.animationView.AnimationView
 import io.virgo_common.common_libs.animationView.Attention
 import io.virgo_common.common_libs.baseApp.SimpleActivity
-import io.virgo_common.common_libs.blurView.RenderEffectBlur
 import io.virgo_common.common_libs.blurView.RenderScriptBlur
 import io.virgo_common.common_libs.customView.shimmer.Shimmer
 import io.virgo_common.common_libs.extensions.isS31Plus
@@ -78,17 +77,26 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 //			AppCompatDelegate.setApplicationLocales(localeList)
 //		}
 
-		val float = 10f
-		val windowBackground = window.decorView.background
-		val algorithm = if (isS31Plus()) {
-			RenderEffectBlur()
-		} else RenderScriptBlur(this)
-		binding.viewBlur.setupWith(binding.root, algorithm)
-			.setFrameClearDrawable(windowBackground)
-			.setBlurRadius(float)
-			.setBlurAutoUpdate(true)
-			.setBlurEnabled(true)
 
+		//BlurView phiên bản cũ
+		val float = 10f
+//		val windowBackground = window.decorView.background
+//		val algorithm = if (isS31Plus()) {
+//			RenderEffectBlur()
+//		} else RenderScriptBlur(this)
+//		binding.viewBlur.setupWith(binding.root, algorithm)
+//			.setFrameClearDrawable(windowBackground)
+//			.setBlurRadius(float)
+//			.setBlurAutoUpdate(true)
+//			.setBlurEnabled(true)
+//		-------------
+
+		//BlurView phiên bản mới 3.0.0
+		binding.viewBlur.apply {
+			setupWith(binding.blurTarget)
+				.setFrameClearDrawable(window.decorView.background)
+				.setBlurRadius(float)
+		}
 		val shimmer = Shimmer().apply {
 			setRepeatCount(-1)
 			setDuration(1500)

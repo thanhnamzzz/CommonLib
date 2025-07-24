@@ -1,27 +1,29 @@
+/* Clone from https://github.com/Dimezis/BlurView */
+
 package io.virgo_common.common_libs.blurView
 
 import android.graphics.Canvas
 
 interface BlurController : BlurViewFacade {
-	/**
-	 * Draws blurred content on given canvas
-	 *
-	 * @return true if BlurView should proceed with drawing itself and its children
-	 */
-	fun draw(canvas: Canvas?): Boolean
+    /**
+     * Draws blurred content on given canvas
+     *
+     * @return true if BlurView should proceed with drawing itself and its children
+     */
+    fun draw(canvas: Canvas?): Boolean
 
-	/**
-	 * Must be used to notify Controller when BlurView's size has changed
-	 */
-	fun updateBlurViewSize()
+    /**
+     * Must be used to notify Controller when BlurView's size has changed
+     */
+    fun updateBlurViewSize()
 
-	/**
-	 * Frees allocated resources
-	 */
-	fun destroy()
+    /**
+     * Frees allocated resources
+     */
+    fun destroy()
 
-	companion object {
-		const val DEFAULT_SCALE_FACTOR: Float = 6f
-		const val DEFAULT_BLUR_RADIUS: Float = 16f
-	}
+    companion object {
+        const val DEFAULT_SCALE_FACTOR: Float = 4f
+        const val DEFAULT_BLUR_RADIUS: Float = 16f
+    }
 }

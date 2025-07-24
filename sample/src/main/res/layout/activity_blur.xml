@@ -5,10 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#8FFFD6"
     tools:context=".blurView.BlurActivity">
 
-    <eightbitlab.com.blurview.BlurTarget
+    <io.virgo_common.common_libs.blurView.BlurTarget
         android:id="@+id/blur_target"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,29 +16,27 @@
             android:id="@+id/rv_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#8FFFD6"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    </eightbitlab.com.blurview.BlurTarget>
+    </io.virgo_common.common_libs.blurView.BlurTarget>
 
-    <eightbitlab.com.blurview.BlurView
+    <io.virgo_common.common_libs.blurView.BlurView
         android:id="@+id/blur_view_v3"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_100sdp"
         android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/_20sdp"
         android:background="@drawable/rounded"
         android:elevation="10dp"
-        app:blurOverlayColor="#8BFFFFFF">
+        app:blurOverlayColor="#27FFFFFF">
 
-        <SeekBar
-            android:id="@+id/seekbar_blur_v3"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center_vertical"
-            android:layout_marginHorizontal="@dimen/_20sdp"
-            android:max="30" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/virgo" />
 
-    </eightbitlab.com.blurview.BlurView>
+    </io.virgo_common.common_libs.blurView.BlurView>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_100sdp"
             android:layout_marginTop="@dimen/_50sdp"
-            app:blurOverlayColor="#4DEFEFEF" />
+            app:blurOverlayColor="#27FFFFFF" />
 
         <SeekBar
             android:id="@+id/seekbar_blur"

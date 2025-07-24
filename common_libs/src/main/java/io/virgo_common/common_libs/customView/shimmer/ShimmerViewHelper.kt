@@ -1,15 +1,13 @@
-package io.virgo_common.common_libs.customView.shimmer;
+package io.virgo_common.common_libs.customView.shimmer
 
-import android.content.res.TypedArray;
-import android.graphics.LinearGradient;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Shader;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-
-import io.virgo_common.common_libs.R;
+import android.graphics.LinearGradient
+import android.graphics.Matrix
+import android.graphics.Paint
+import android.graphics.Shader
+import android.util.AttributeSet
+import android.view.View
+import androidx.core.content.withStyledAttributes
+import io.virgo_common.common_libs.R
 
 /**
  * Shimmer
@@ -17,172 +15,170 @@ import io.virgo_common.common_libs.R;
  * Date: 10/03/2014
  * Time: 17:06
  */
-public class ShimmerViewHelper {
+class ShimmerViewHelper(
+	private val view: View,
+	private val paint: Paint,
+	attributeSet: AttributeSet?
+) {
+	interface AnimationSetupCallback {
+		fun onSetupAnimation(target: View?)
+	}
 
-    public interface AnimationSetupCallback {
-        void onSetupAnimation(View target);
-    }
+	// center position of the gradient
+	private var gradientX = 0f
 
-    private static final int DEFAULT_REFLECTION_COLOR = 0xFFFFFFFF;
+	// shader applied on the text view
+	// only null until the first global layout
+	private var linearGradient: LinearGradient? = null
 
-    private final View view;
-    private final Paint paint;
+	// shader's local matrix
+	// never null
+	private var linearGradientMatrix: Matrix? = null
 
-    // center position of the gradient
-    private float gradientX;
+	private var primaryColor = 0
 
-    // shader applied on the text view
-    // only null until the first global layout
-    private LinearGradient linearGradient;
+	// shimmer reflection color
+	private var reflectionColor = 0
 
-    // shader's local matrix
-    // never null
-    private Matrix linearGradientMatrix;
+	// true when animating
+	@JvmField
+	var isShimmering: Boolean = false
 
-    private int primaryColor;
+	// true after first global layout
+	var isSetUp: Boolean = false
+		private set
 
-    // shimmer reflection color
-    private int reflectionColor;
+	// callback called after first global layout
+	private var callback: AnimationSetupCallback? = null
 
-    // true when animating
-    private boolean isShimmering;
+	init {
+		reflectionColor = DEFAULT_REFLECTION_COLOR
+		view.context.withStyledAttributes(attributeSet, R.styleable.ShimmerView, 0, 0) {
+			reflectionColor = getColor(
+				R.styleable.ShimmerView_reflectionColor,
+				DEFAULT_REFLECTION_COLOR
+			)
+		}
 
-    // true after first global layout
-    private boolean isSetUp;
+		linearGradientMatrix = Matrix()
+	}
 
-    // callback called after first global layout
-    private AnimationSetupCallback callback;
+	fun getGradientX(): Float {
+		return gradientX
+	}
 
-    public ShimmerViewHelper(View view, Paint paint, AttributeSet attributeSet) {
-        this.view = view;
-        this.paint = paint;
-        init(attributeSet);
-    }
+	fun setGradientX(gradientX: Float) {
+		this.gradientX = gradientX
+		view.invalidate()
+	}
 
-    public float getGradientX() {
-        return gradientX;
-    }
+	fun setAnimationSetupCallback(callback: AnimationSetupCallback?) {
+		this.callback = callback
+	}
 
-    public void setGradientX(float gradientX) {
-        this.gradientX = gradientX;
-        view.invalidate();
-    }
+	fun getPrimaryColor(): Int {
+		return primaryColor
+	}
 
-    public boolean isShimmering() {
-        return isShimmering;
-    }
+	fun setPrimaryColor(primaryColor: Int) {
+		this.primaryColor = primaryColor
+		if (isSetUp) {
+			resetLinearGradient()
+		}
+	}
 
-    public void setShimmering(boolean isShimmering) {
-        this.isShimmering = isShimmering;
-    }
+	fun getReflectionColor(): Int {
+		return reflectionColor
+	}
 
-    public boolean isSetUp() {
-        return isSetUp;
-    }
+	fun setReflectionColor(reflectionColor: Int) {
+		this.reflectionColor = reflectionColor
+		if (isSetUp) {
+			resetLinearGradient()
+		}
+	}
 
-    public void setAnimationSetupCallback(AnimationSetupCallback callback) {
-        this.callback = callback;
-    }
+//	private fun init(attributeSet: AttributeSet?) {
+//		reflectionColor = DEFAULT_REFLECTION_COLOR
+//		if (attributeSet != null) {
+//			try {
+//				view.context.obtainStyledAttributes(
+//					attributeSet, R.styleable.ShimmerView, 0, 0
+//				).use { a ->
+//					reflectionColor = a.getColor(
+//						R.styleable.ShimmerView_reflectionColor,
+//						DEFAULT_REFLECTION_COLOR
+//					)
+//				}
+//			} catch (e: Exception) {
+//				Log.e("ShimmerTextView", "Error while reading reflectionColor attribute", e)
+//			}
+//		}
+//
+//		linearGradientMatrix = Matrix()
+//	}
 
-    public int getPrimaryColor() {
-        return primaryColor;
-    }
+	private fun resetLinearGradient() {
+		// our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
+		// when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
+		// initially, the linear gradient is positioned on the left side of the view
 
-    public void setPrimaryColor(int primaryColor) {
-        this.primaryColor = primaryColor;
-        if (isSetUp) {
-            resetLinearGradient();
-        }
-    }
+		linearGradient = LinearGradient(
+			-view.width.toFloat(), 0f, 0f, 0f,
+			intArrayOf(
+				primaryColor,
+				reflectionColor,
+				primaryColor,
+			),
+			floatArrayOf(
+				0f,
+				0.5f,
+				1f
+			),
+			Shader.TileMode.CLAMP
+		)
 
-    public int getReflectionColor() {
-        return reflectionColor;
-    }
+		paint.shader = linearGradient
+	}
 
-    public void setReflectionColor(int reflectionColor) {
-        this.reflectionColor = reflectionColor;
-        if (isSetUp) {
-            resetLinearGradient();
-        }
-    }
+	fun onSizeChanged() {
+		resetLinearGradient()
 
-    private void init(AttributeSet attributeSet) {
+		if (!isSetUp) {
+			isSetUp = true
 
-        reflectionColor = DEFAULT_REFLECTION_COLOR;
-        if (attributeSet != null) {
-            try (TypedArray a = view.getContext().obtainStyledAttributes(
-                    attributeSet, R.styleable.ShimmerView, 0, 0)) {
-                reflectionColor = a.getColor(
-                        R.styleable.ShimmerView_reflectionColor,
-                        DEFAULT_REFLECTION_COLOR
-                );
-            } catch (Exception e) {
-                Log.e("ShimmerTextView", "Error while reading reflectionColor attribute", e);
-            }
-        }
+			if (callback != null) {
+				callback!!.onSetupAnimation(view)
+			}
+		}
+	}
 
-        linearGradientMatrix = new Matrix();
-    }
+	/**
+	 * content of the wrapping view's onDraw(Canvas)
+	 * MUST BE CALLED BEFORE SUPER STATEMENT
+	 */
+	fun onDraw() {
+		// only draw the shader gradient over the text while animating
 
-    private void resetLinearGradient() {
+		if (isShimmering) {
+			// first onDraw() when shimmering
 
-        // our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
-        // when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
-        // initially, the linear gradient is positioned on the left side of the view
-        linearGradient = new LinearGradient(-view.getWidth(), 0, 0, 0,
-                new int[]{
-                        primaryColor,
-                        reflectionColor,
-                        primaryColor,
-                },
-                new float[]{
-                        0,
-                        0.5f,
-                        1
-                },
-                Shader.TileMode.CLAMP
-        );
+			if (paint.shader == null) {
+				paint.shader = linearGradient
+			}
 
-        paint.setShader(linearGradient);
-    }
+			// translate the shader local matrix
+			linearGradientMatrix!!.setTranslate(2 * gradientX, 0f)
 
-    protected void onSizeChanged() {
+			// this is required in order to invalidate the shader's position
+			linearGradient!!.setLocalMatrix(linearGradientMatrix)
+		} else {
+			// we're not animating, remove the shader from the paint
+			paint.shader = null
+		}
+	}
 
-        resetLinearGradient();
-
-        if (!isSetUp) {
-            isSetUp = true;
-
-            if (callback != null) {
-                callback.onSetupAnimation(view);
-            }
-        }
-    }
-
-    /**
-     * content of the wrapping view's onDraw(Canvas)
-     * MUST BE CALLED BEFORE SUPER STATEMENT
-     */
-    public void onDraw() {
-
-        // only draw the shader gradient over the text while animating
-        if (isShimmering) {
-
-            // first onDraw() when shimmering
-            if (paint.getShader() == null) {
-                paint.setShader(linearGradient);
-            }
-
-            // translate the shader local matrix
-            linearGradientMatrix.setTranslate(2 * gradientX, 0);
-
-            // this is required in order to invalidate the shader's position
-            linearGradient.setLocalMatrix(linearGradientMatrix);
-
-        } else {
-            // we're not animating, remove the shader from the paint
-            paint.setShader(null);
-        }
-
-    }
+	companion object {
+		private const val DEFAULT_REFLECTION_COLOR = -0x1
+	}
 }

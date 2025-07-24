@@ -22,17 +22,15 @@ class StrokeTextView @JvmOverloads constructor(
 	private var borderJoin: Join = Join.MITER
 
 	init {
-		attrs?.let {
-			context.withStyledAttributes(it, R.styleable.StrokeTextView, 0, 0) {
-				textColor = getColor(R.styleable.StrokeTextView_strokeTextColor, Color.BLACK)
-				borderColor =
-					getColor(R.styleable.StrokeTextView_strokeBorderColor, Color.WHITE)
-				borderWidth = getFloat(R.styleable.StrokeTextView_strokeBorderWidth, 5f)
-				borderJoin = Join.entries.toTypedArray()[getInt(
-					R.styleable.StrokeTextView_strokeBorderJoin,
-					0
-				)]
-			}
+		context.withStyledAttributes(attrs, R.styleable.StrokeTextView, 0, 0) {
+			textColor = getColor(R.styleable.StrokeTextView_strokeTextColor, Color.BLACK)
+			borderColor =
+				getColor(R.styleable.StrokeTextView_strokeBorderColor, Color.WHITE)
+			borderWidth = getFloat(R.styleable.StrokeTextView_strokeBorderWidth, 5f)
+			borderJoin = Join.entries.toTypedArray()[getInt(
+				R.styleable.StrokeTextView_strokeBorderJoin,
+				1
+			)]
 		}
 	}
 

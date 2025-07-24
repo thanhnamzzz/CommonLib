@@ -15,17 +15,17 @@ import androidx.core.graphics.createBitmap
 fun Bitmap?.saveBitmapToJpgCache(context: Context, fileName: String): String? {
     val cacheDir: File = context.cacheDir
     val file = File(cacheDir, fileName)
-    this?.let {
+    if (this != null) {
         if (file.exists()) if (!file.delete()) return null
         return try {
             FileOutputStream(file).use { outputStream ->
-                it.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                this.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
             }
             file.absolutePath
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             null
         }
-    } ?: run { return null }
+    } else return null
 }
 
 fun Bitmap.saveBitmapToPng(folder: String, fileName: String): String? {

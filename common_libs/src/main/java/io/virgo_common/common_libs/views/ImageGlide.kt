@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 fun Context.loadImage(
 	view: ImageView,
 	image: Any,
-	complete: (complete: Boolean, error: String?) -> Unit
+	complete: (complete: Boolean, error: String?) -> Unit = { _, _ -> }
 ) {
 	val exception = CoroutineExceptionHandler { _, throwable ->
 		throwable.message?.let {
@@ -29,20 +29,6 @@ fun Context.loadImage(
 	}
 }
 
-fun Context.loadImage(
-	view: ImageView,
-	image: Any
-) {
-	val exception = CoroutineExceptionHandler { _, throwable ->
-		throwable.message?.let {
-			Log.e("Namzzz", ": loadImage", throwable)
-		}
-	}
-	CoroutineScope(Dispatchers.Main).launch(exception) {
-		Glide.with(this@loadImage).load(image).into(view)
-	}
-}
-
 enum class ImageTrans {
 	FIT_CENTER,
 	CENTER_CROP,
@@ -54,7 +40,7 @@ fun Context.loadImage(
 	view: ImageView,
 	image: Any,
 	trans: ImageTrans,
-	complete: (complete: Boolean, error: String?) -> Unit
+	complete: (complete: Boolean, error: String?) -> Unit = { _, _ -> }
 ) {
 	val exception = CoroutineExceptionHandler { _, throwable ->
 		throwable.message?.let {
@@ -81,7 +67,7 @@ fun Context.loadImage(
 	image: Any,
 	trans: ImageTrans,
 	error: Any,
-	complete: (complete: Boolean, error: String?) -> Unit
+	complete: (complete: Boolean, error: String?) -> Unit = { _, _ -> }
 ) {
 	val exception = CoroutineExceptionHandler { _, throwable ->
 		throwable.message?.let {
@@ -93,20 +79,20 @@ fun Context.loadImage(
 	CoroutineScope(Dispatchers.Main).launch(exception) {
 		when (trans) {
 			ImageTrans.FIT_CENTER -> Glide.with(this@loadImage).load(image).fitCenter().error(
-					Glide.with(this@loadImage).load(error).centerInside()
-				).into(view)
+				Glide.with(this@loadImage).load(error).centerInside()
+			).into(view)
 
 			ImageTrans.CENTER_CROP -> Glide.with(this@loadImage).load(image).centerCrop().error(
-					Glide.with(this@loadImage).load(error).centerInside()
-				).into(view)
+				Glide.with(this@loadImage).load(error).centerInside()
+			).into(view)
 
 			ImageTrans.CENTER_INSIDE -> Glide.with(this@loadImage).load(image).centerInside().error(
-					Glide.with(this@loadImage).load(error).centerInside()
-				).into(view)
+				Glide.with(this@loadImage).load(error).centerInside()
+			).into(view)
 
 			ImageTrans.CIRCLE_CROP -> Glide.with(this@loadImage).load(image).circleCrop().error(
-					Glide.with(this@loadImage).load(error).centerInside()
-				).into(view)
+				Glide.with(this@loadImage).load(error).centerInside()
+			).into(view)
 		}
 		complete(true, null)
 	}
@@ -118,7 +104,7 @@ fun Context.loadImage(
 	trans: ImageTrans,
 	placeHolder: Drawable?,
 	error: Any,
-	complete: (complete: Boolean, error: String?) -> Unit
+	complete: (complete: Boolean, error: String?) -> Unit = { _, _ -> }
 ) {
 	val exception = CoroutineExceptionHandler { _, throwable ->
 		throwable.message?.let {

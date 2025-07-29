@@ -17,6 +17,7 @@ import kotlin.math.cos
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.roundToInt
+import androidx.core.content.withStyledAttributes
 
 class ProgressWheel : View {
 	private val barLength = 16
@@ -78,7 +79,43 @@ class ProgressWheel : View {
 	 * The constructor for the ProgressWheel
 	 */
 	constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
-		parseAttributes(context.obtainStyledAttributes(attrs, R.styleable.ProgressWheel))
+		context.withStyledAttributes(attrs, R.styleable.ProgressWheel) {
+			val metrics = context.resources.displayMetrics
+			barWidth =
+				TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth.toFloat(), metrics)
+					.toInt()
+			rimWidth =
+				TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth.toFloat(), metrics)
+					.toInt()
+			circleRadius =
+				TypedValue.applyDimension(
+					TypedValue.COMPLEX_UNIT_DIP,
+					circleRadius.toFloat(),
+					metrics
+				)
+					.toInt()
+			circleRadius =
+				getDimension(R.styleable.ProgressWheel_pw_circleRadius, circleRadius.toFloat())
+					.toInt()
+			fillRadius = getBoolean(R.styleable.ProgressWheel_pw_fillRadius, false)
+			barWidth =
+				getDimension(R.styleable.ProgressWheel_pw_barWidth, barWidth.toFloat()).toInt()
+			rimWidth =
+				getDimension(R.styleable.ProgressWheel_pw_rimWidth, rimWidth.toFloat()).toInt()
+			val baseSpinSpeed = getFloat(R.styleable.ProgressWheel_pw_spinSpeed, spinSpeed / 360.0f)
+			spinSpeed = baseSpinSpeed * 360
+
+			barSpinCycleTime =
+				getInt(R.styleable.ProgressWheel_pw_barSpinCycleTime, barSpinCycleTime.toInt())
+					.toDouble()
+			barColor = getColor(R.styleable.ProgressWheel_pw_barColor, barColor)
+			rimColor = getColor(R.styleable.ProgressWheel_pw_rimColor, rimColor)
+
+			linearProgress = getBoolean(R.styleable.ProgressWheel_pw_linearProgress, false)
+			borderProgress = getBoolean(R.styleable.ProgressWheel_pw_borderProgress, false)
+
+			if (getBoolean(R.styleable.ProgressWheel_pw_progressIndeterminate, false)) spin()
+		}
 
 		setAnimationEnabled()
 	}
@@ -217,47 +254,6 @@ class ProgressWheel : View {
 				(height - paddingBottom - barWidth).toFloat()
 			)
 		}
-	}
-
-	/**
-	 * Parse the attributes passed to the view from the XML
-	 *
-	 * @param a the attributes to parse
-	 */
-	private fun parseAttributes(a: TypedArray) {
-		// We transform the default values from DIP to pixels
-		val metrics = context.resources.displayMetrics
-		barWidth =
-			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, barWidth.toFloat(), metrics)
-				.toInt()
-		rimWidth =
-			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, rimWidth.toFloat(), metrics)
-				.toInt()
-		circleRadius =
-			TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, circleRadius.toFloat(), metrics)
-				.toInt()
-		circleRadius =
-			a.getDimension(R.styleable.ProgressWheel_pw_circleRadius, circleRadius.toFloat())
-				.toInt()
-		fillRadius = a.getBoolean(R.styleable.ProgressWheel_pw_fillRadius, false)
-		barWidth = a.getDimension(R.styleable.ProgressWheel_pw_barWidth, barWidth.toFloat()).toInt()
-		rimWidth = a.getDimension(R.styleable.ProgressWheel_pw_rimWidth, rimWidth.toFloat()).toInt()
-		val baseSpinSpeed = a.getFloat(R.styleable.ProgressWheel_pw_spinSpeed, spinSpeed / 360.0f)
-		spinSpeed = baseSpinSpeed * 360
-
-		barSpinCycleTime =
-			a.getInt(R.styleable.ProgressWheel_pw_barSpinCycleTime, barSpinCycleTime.toInt())
-				.toDouble()
-		barColor = a.getColor(R.styleable.ProgressWheel_pw_barColor, barColor)
-		rimColor = a.getColor(R.styleable.ProgressWheel_pw_rimColor, rimColor)
-
-		linearProgress = a.getBoolean(R.styleable.ProgressWheel_pw_linearProgress, false)
-		borderProgress = a.getBoolean(R.styleable.ProgressWheel_pw_borderProgress, false)
-
-		if (a.getBoolean(R.styleable.ProgressWheel_pw_progressIndeterminate, false)) spin()
-
-		// Recycle
-		a.recycle()
 	}
 
 	fun setCallback(progressCallback: ProgressCallback?) {

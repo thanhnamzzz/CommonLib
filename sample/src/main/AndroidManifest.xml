@@ -13,6 +13,12 @@
         android:theme="@style/Theme.CommonLib"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".animationActivity.SecondActivity"
+            android:exported="false" />
+        <activity
+            android:name=".animationActivity.AnimationActivity"
+            android:exported="false" />
+        <activity
             android:name=".blurView.BlurActivity"
             android:exported="false" />
         <activity

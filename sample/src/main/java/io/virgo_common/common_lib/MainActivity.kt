@@ -8,6 +8,7 @@ import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import io.virgo_common.common_lib.animationActivity.AnimationActivity
 import io.virgo_common.common_lib.blurView.BlurActivity
 import io.virgo_common.common_lib.databinding.ActivityMainBinding
 import io.virgo_common.common_lib.flowLayout.FlowLayoutActivity
@@ -37,7 +38,7 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 			WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 		)
 		AnimationView().apply {
-			setAnimation(Attention().Ruberband(binding.gradientText))
+			setAnimation(Attention().Ruberband(binding.btnGradientButton))
 			isLoop(true)
 			setDelayLoop(2000)
 			start()
@@ -60,13 +61,17 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 //			Log.d("CurrentLocale", "Language: $language, Country: $country")
 //		}}
 		binding.btnOpenToolBar.setOnClickListener {
-			startActivity(Intent(this@MainActivity, ToolBarActivity::class.java))
+			startActivity(Intent(this, ToolBarActivity::class.java))
 		}
 		binding.btnOpenFlowLayout.setOnClickListener {
-			startActivity(Intent(this@MainActivity, FlowLayoutActivity::class.java))
+			startActivity(Intent(this, FlowLayoutActivity::class.java))
 		}
 		binding.btnOpenBlurLayout.setOnClickListener {
-			startActivity(Intent(this@MainActivity, BlurActivity::class.java))
+			startActivity(Intent(this, BlurActivity::class.java))
+		}
+
+		binding.btnGradientButton.setOnClickListener {
+			startActivity(Intent(this, AnimationActivity::class.java))
 		}
 
 //		binding.btnChangeLanguage.setOnClickListener {

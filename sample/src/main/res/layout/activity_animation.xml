@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingHorizontal="@dimen/_20sdp"
+    android:paddingVertical="@dimen/_5sdp"
+    tools:context=".animationActivity.AnimationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_make_scene_transition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Make Scene Transition" />
+
+        <Button
+            android:id="@+id/btn_make_basic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Make Basic" />
+
+        <Button
+            android:id="@+id/btn_clip_reveal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clip Reveal" />
+
+        <ImageView
+            android:id="@+id/image_rec"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:src="@color/black" />
+
+        <Button
+            android:id="@+id/btn_scale_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scale Up Animation" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

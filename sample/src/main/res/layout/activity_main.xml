@@ -29,12 +29,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <io.virgo_common.common_libs.customView.GradientBackgroundButton
-            android:id="@+id/gradient_text"
+            android:id="@+id/btn_gradient_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/_50sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
             android:paddingVertical="@dimen/_10sdp"
-            android:text="Button"
+            android:text="Animation Activity"
             app:button_color1="@color/get_started_3"
             app:button_color2="@color/get_started_4"
             app:cornerRadius="0dp"

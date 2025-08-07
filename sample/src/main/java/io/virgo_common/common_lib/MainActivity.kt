@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.virgo_common.common_lib.animationActivity.AnimationActivity
@@ -16,9 +17,8 @@ import io.virgo_common.common_lib.toolBar.ToolBarActivity
 import io.virgo_common.common_libs.animationView.AnimationView
 import io.virgo_common.common_libs.animationView.Attention
 import io.virgo_common.common_libs.baseApp.SimpleActivity
-import io.virgo_common.common_libs.blurView.RenderScriptBlur
 import io.virgo_common.common_libs.customView.shimmer.Shimmer
-import io.virgo_common.common_libs.extensions.isS31Plus
+import io.virgo_common.common_libs.functions.GlobalFunction
 
 class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 	private val listKey = listOf("en", "hi", "ja", "vi")
@@ -28,7 +28,8 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 		enableEdgeToEdge()
 		setContentView(binding.root)
 		ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-			val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+			val systemBars =
+				insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
 			v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
 			insets
 		}
@@ -128,4 +129,20 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 //		val shimmer = Shimmer()
 		shimmer.start(binding.shimmerTv)
 	}
+
+	private val launcher =
+		registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+			Log.d("Namzzz", "MainActivity: launcher")
+			when (it.resultCode) {
+				RESULT_OK -> {
+					Log.i("Namzzz", "MainActivity: RESULT_OK")
+				}
+				RESULT_CANCELED -> {
+					Log.e("Namzzz", "MainActivity: RESULT_CANCEL")
+				}
+				else -> {
+					Log.d("Namzzz", "MainActivity: other: ${it.resultCode}")
+				}
+			}
+		}
 }

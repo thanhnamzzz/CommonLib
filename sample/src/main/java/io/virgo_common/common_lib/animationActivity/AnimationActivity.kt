@@ -3,10 +3,13 @@ package io.virgo_common.common_lib.animationActivity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.virgo_common.common_lib.databinding.ActivityAnimationBinding
+import io.virgo_common.common_libs.animationView.activityMakeBasicAnimation
+import io.virgo_common.common_libs.animationView.activityMakeClipRevealAnimation
+import io.virgo_common.common_libs.animationView.activityMakeScaleUpAnimation
+import io.virgo_common.common_libs.animationView.activityMakeSceneTransition
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 
 class AnimationActivity :
@@ -24,31 +27,22 @@ class AnimationActivity :
 		val intent = Intent(this, SecondActivity::class.java)
 
 		binding.btnMakeSceneTransition.setOnClickListener {
-			val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-				this,
-				binding.btnMakeSceneTransition,
-				"shared"
+			startActivity(
+				intent,
+				activityMakeSceneTransition(binding.btnMakeSceneTransition, "shared").toBundle()
 			)
-			startActivity(intent, options.toBundle())
 		}
 
 		binding.btnMakeBasic.setOnClickListener {
-			val options = ActivityOptionsCompat.makeBasic()
-			startActivity(intent, options.toBundle())
+			startActivity(intent, activityMakeBasicAnimation().toBundle())
 		}
 
 		binding.btnClipReveal.setOnClickListener {
-			val o = ActivityOptionsCompat.makeClipRevealAnimation(
-				binding.imageRec, 0, 0, binding.imageRec.width, binding.imageRec.height
-			)
-			startActivity(intent, o.toBundle())
+			startActivity(intent, activityMakeClipRevealAnimation(binding.imageRec).toBundle())
 		}
 
 		binding.btnScaleUp.setOnClickListener {
-			val o = ActivityOptionsCompat.makeScaleUpAnimation(
-				binding.imageRec, 0,0,binding.imageRec.width,binding.imageRec.height
-			)
-			startActivity(intent, o.toBundle())
+			startActivity(intent, activityMakeScaleUpAnimation(binding.imageRec).toBundle())
 		}
 	}
 }

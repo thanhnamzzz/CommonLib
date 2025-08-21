@@ -29,20 +29,20 @@ class AnimationActivity :
 		binding.btnMakeSceneTransition.setOnClickListener {
 			startActivity(
 				intent,
-				activityMakeSceneTransition(binding.btnMakeSceneTransition, "shared").toBundle()
+				activityMakeSceneTransition(binding.btnMakeSceneTransition, "shared")
 			)
 		}
 
 		binding.btnMakeBasic.setOnClickListener {
-			startActivity(intent, activityMakeBasicAnimation().toBundle())
+			startActivity(intent, activityMakeBasicAnimation())
 		}
 
 		binding.btnClipReveal.setOnClickListener {
-			startActivity(intent, activityMakeClipRevealAnimation(binding.imageRec).toBundle())
+			startActivity(intent, activityMakeClipRevealAnimation(binding.imageRec))
 		}
 
 		binding.btnScaleUp.setOnClickListener {
-			startActivity(intent, activityMakeScaleUpAnimation(binding.imageRec).toBundle())
+			startActivity(intent, activityMakeScaleUpAnimation(binding.imageRec))
 		}
 	}
 }

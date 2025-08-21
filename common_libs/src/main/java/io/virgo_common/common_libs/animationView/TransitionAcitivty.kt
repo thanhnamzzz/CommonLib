@@ -1,6 +1,7 @@
 package io.virgo_common.common_libs.animationView
 
 import android.app.Activity
+import android.os.Bundle
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 
@@ -8,40 +9,40 @@ import androidx.core.app.ActivityOptionsCompat
 fun Activity.activityMakeSceneTransition(
 	viewTarget: View,
 	sharedElementName: String
-): ActivityOptionsCompat {
+): Bundle? {
 	return ActivityOptionsCompat.makeSceneTransitionAnimation(
 		this,
 		viewTarget,
 		sharedElementName
-	)
+	).toBundle()
 }
 
 fun activityMakeClipRevealAnimation(
 	viewTarget: View,
 	startX: Int = 0,
 	startY: Int = 0
-): ActivityOptionsCompat {
+): Bundle? {
 	return ActivityOptionsCompat.makeClipRevealAnimation(
 		viewTarget, startX, startY,
 		viewTarget.width, viewTarget.height
-	)
+	).toBundle()
 }
 
 fun activityMakeScaleUpAnimation(
 	viewTarget: View,
 	startX: Int = 0,
 	startY: Int = 0
-): ActivityOptionsCompat {
+): Bundle? {
 	return ActivityOptionsCompat.makeScaleUpAnimation(
 		viewTarget, startX, startY,
 		viewTarget.width, viewTarget.height
-	)
+	).toBundle()
 }
 
-fun Activity.activityMakeCustomAnimation(enterRes: Int, exitRes: Int): ActivityOptionsCompat {
-	return ActivityOptionsCompat.makeCustomAnimation(this, enterRes, exitRes)
+fun Activity.activityMakeCustomAnimation(enterRes: Int, exitRes: Int): Bundle? {
+	return ActivityOptionsCompat.makeCustomAnimation(this, enterRes, exitRes).toBundle()
 }
 
-fun activityMakeBasicAnimation(): ActivityOptionsCompat {
-	return ActivityOptionsCompat.makeBasic()
+fun activityMakeBasicAnimation(): Bundle? {
+	return ActivityOptionsCompat.makeBasic().toBundle()
 }

@@ -1,4 +1,5 @@
-/* Clone from https://github.com/Dimezis/BlurView */
+/* Clone from https://github.com/Dimezis/BlurView
+* from commit fd1c9de 25-07-2025 */
 
 package io.virgo_common.common_libs.blurView
 
@@ -157,45 +158,9 @@ class BlurView @JvmOverloads constructor(
 		return blurController.setBlurEnabled(enabled)
 	}
 
-	override fun setTranslationY(translationY: Float) {
-		super.setTranslationY(translationY)
-		notifyTranslationYChanged(translationY)
-	}
-
-	override fun setTranslationX(translationX: Float) {
-		super.setTranslationX(translationX)
-		notifyTranslationXChanged(translationX)
-	}
-
-	override fun setTranslationZ(translationZ: Float) {
-		super.setTranslationZ(translationZ)
-		notifyTranslationZChanged(translationZ)
-	}
-
 	override fun setRotation(rotation: Float) {
 		super.setRotation(rotation)
 		notifyRotationChanged(rotation)
-	}
-
-	@SuppressLint("NewApi")
-	fun notifyTranslationYChanged(translationY: Float) {
-		if (usingRenderNode()) {
-			(blurController as RenderNodeBlurController).updateTranslationY(translationY)
-		}
-	}
-
-	@SuppressLint("NewApi")
-	fun notifyTranslationXChanged(translationX: Float) {
-		if (usingRenderNode()) {
-			(blurController as RenderNodeBlurController).updateTranslationX(translationX)
-		}
-	}
-
-	@SuppressLint("NewApi")
-	private fun notifyTranslationZChanged(translationZ: Float) {
-		if (usingRenderNode()) {
-			(blurController as RenderNodeBlurController).updateTranslationZ(translationZ)
-		}
 	}
 
 	@SuppressLint("NewApi")

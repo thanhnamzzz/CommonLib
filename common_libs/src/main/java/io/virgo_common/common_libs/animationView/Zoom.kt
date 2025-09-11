@@ -73,10 +73,7 @@ class Zoom {
 		return animatorSet
 	}
 
-	/*
-	Out
-	 */
-
+	/*	Out	 */
 	fun Out(view: View): AnimatorSet {
 		val animatorSet = AnimatorSet()
 
@@ -142,6 +139,4 @@ class Zoom {
 		animatorSet.playTogether(object1, object2, object3, object4)
 		return animatorSet
 	}
-
-
 }

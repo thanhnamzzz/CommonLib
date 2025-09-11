@@ -100,6 +100,4 @@ class Slide {
 		animatorSet.playTogether(object1, object2)
 		return animatorSet
 	}
-
-
 }

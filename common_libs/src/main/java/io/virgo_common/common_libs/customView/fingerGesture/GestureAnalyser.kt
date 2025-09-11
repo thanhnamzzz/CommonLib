@@ -265,8 +265,6 @@ class GestureAnalyser @JvmOverloads constructor(
 
 
 	companion object {
-		const val DEBUG: Boolean = true
-
 		// Finished gestures flags
 		const val SWIPE_1_UP: Int = 11
 		const val SWIPE_1_DOWN: Int = 12
@@ -290,20 +288,6 @@ class GestureAnalyser @JvmOverloads constructor(
 		const val UN_PINCH_3: Int = 36
 		const val PINCH_4: Int = 45
 		const val UN_PINCH_4: Int = 46
-
 		const val DOUBLE_TAP_1: Int = 107
-
-		//Ongoing gesture flags
-		const val SWIPING_1_UP: Int = 101
-		const val SWIPING_1_DOWN: Int = 102
-		const val SWIPING_1_LEFT: Int = 103
-		const val SWIPING_1_RIGHT: Int = 104
-		const val SWIPING_2_UP: Int = 201
-		const val SWIPING_2_DOWN: Int = 202
-		const val SWIPING_2_LEFT: Int = 203
-		const val SWIPING_2_RIGHT: Int = 204
-		const val PINCHING: Int = 205
-		const val UN_PINCHING: Int = 206
-		private const val TAG = "GestureAnalyser"
 	}
 }

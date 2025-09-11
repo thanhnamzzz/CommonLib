@@ -120,6 +120,14 @@ object GlobalFunction {
 
 	fun openPrivacyPolicy(activity: Activity, link: String) {
 		//Need add queries action view in manifest
+		/**		<queries> <!-- Add queries for open privacy policy -->
+		 *			<intent>
+		 *				<action android:name="android.intent.action.VIEW" />
+		 *
+		 *				<data android:scheme="http" />
+		 *			</intent>
+		 *		</queries>
+		 */
 		if (link.isBlank()) {
 			Log.d("Namzzz", "GlobalFunction: openPrivacyPolicy link is blank")
 			return

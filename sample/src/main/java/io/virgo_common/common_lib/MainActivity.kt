@@ -108,8 +108,8 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 		val shimmer = Shimmer().apply {
 			setRepeatCount(-1) //Có thể bỏ qua vì mặc định là -1 là ValueAnimator.INFINITE lặp vô hạn
 			setDuration(1500) //Default = 1000L
-			setStartDelay(1000) //Default = 0 - không delay khi start()
-			setDirection(Shimmer.ANIMATION_DIRECTION_RTL) //Hướng shimmer chạy ANIMATION_DIRECTION_LTR or ANIMATION_DIRECTION_RTL
+			setStartDelay(200) //Default = 0 - không delay khi start()
+			setDirection(Shimmer.ANIMATION_DIRECTION_LTR) //Hướng shimmer chạy ANIMATION_DIRECTION_LTR or ANIMATION_DIRECTION_RTL
 			setAnimatorListener(object : Animator.AnimatorListener {
 				override fun onAnimationStart(p0: Animator) {}
 
@@ -121,7 +121,7 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 			}) //bắt sự kiện shimmer chạy
 		}
 		binding.shimmerTv.apply {
-			reflectionColor = ContextCompat.getColor(this@MainActivity, R.color.black)
+			reflectionColor = ContextCompat.getColor(this@MainActivity, R.color.get_started_1)
 		}
 		shimmer.start(binding.shimmerTv)
 	}

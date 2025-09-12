@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import io.virgo_common.common_lib.animationActivity.AnimationActivity
@@ -18,7 +19,6 @@ import io.virgo_common.common_libs.animationView.AnimationView
 import io.virgo_common.common_libs.animationView.Attention
 import io.virgo_common.common_libs.baseApp.SimpleActivity
 import io.virgo_common.common_libs.customView.shimmer.Shimmer
-import io.virgo_common.common_libs.functions.GlobalFunction
 
 class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 	private val listKey = listOf("en", "hi", "ja", "vi")
@@ -30,7 +30,7 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 		ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
 			val systemBars =
 				insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-			v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0)
+			v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
 			insets
 		}
 
@@ -103,30 +103,26 @@ class MainActivity : SimpleActivity<ActivityMainBinding>(ActivityMainBinding::in
 				.setFrameClearDrawable(window.decorView.background)
 				.setBlurRadius(float)
 		}
+
+
 		val shimmer = Shimmer().apply {
-			setRepeatCount(-1)
-			setDuration(1500)
-			setStartDelay(1000)
-			setDirection(Shimmer.ANIMATION_DIRECTION_RTL)
+			setRepeatCount(-1) //Có thể bỏ qua vì mặc định là -1 là ValueAnimator.INFINITE lặp vô hạn
+			setDuration(1500) //Default = 1000L
+			setStartDelay(1000) //Default = 0 - không delay khi start()
+			setDirection(Shimmer.ANIMATION_DIRECTION_RTL) //Hướng shimmer chạy ANIMATION_DIRECTION_LTR or ANIMATION_DIRECTION_RTL
 			setAnimatorListener(object : Animator.AnimatorListener {
-				override fun onAnimationStart(p0: Animator) {
+				override fun onAnimationStart(p0: Animator) {}
 
-				}
+				override fun onAnimationEnd(p0: Animator) {}
 
-				override fun onAnimationEnd(p0: Animator) {
+				override fun onAnimationCancel(p0: Animator) {}
 
-				}
-
-				override fun onAnimationCancel(p0: Animator) {
-
-				}
-
-				override fun onAnimationRepeat(p0: Animator) {
-
-				}
-			})
+				override fun onAnimationRepeat(p0: Animator) {}
+			}) //bắt sự kiện shimmer chạy
 		}
-//		val shimmer = Shimmer()
+		binding.shimmerTv.apply {
+			reflectionColor = ContextCompat.getColor(this@MainActivity, R.color.black)
+		}
 		shimmer.start(binding.shimmerTv)
 	}
 

@@ -98,26 +98,6 @@ class ShimmerViewHelper(
 		}
 	}
 
-//	private fun init(attributeSet: AttributeSet?) {
-//		reflectionColor = DEFAULT_REFLECTION_COLOR
-//		if (attributeSet != null) {
-//			try {
-//				view.context.obtainStyledAttributes(
-//					attributeSet, R.styleable.ShimmerView, 0, 0
-//				).use { a ->
-//					reflectionColor = a.getColor(
-//						R.styleable.ShimmerView_reflectionColor,
-//						DEFAULT_REFLECTION_COLOR
-//					)
-//				}
-//			} catch (e: Exception) {
-//				Log.e("ShimmerTextView", "Error while reading reflectionColor attribute", e)
-//			}
-//		}
-//
-//		linearGradientMatrix = Matrix()
-//	}
-
 	private fun resetLinearGradient() {
 		// our gradient is a simple linear gradient from textColor to reflectionColor. its axis is at the center
 		// when it's outside of the view, the outer color (textColor) will be repeated (Shader.TileMode.CLAMP)
@@ -147,9 +127,7 @@ class ShimmerViewHelper(
 		if (!isSetUp) {
 			isSetUp = true
 
-			if (callback != null) {
-				callback!!.onSetupAnimation(view)
-			}
+			callback?.onSetupAnimation(view)
 		}
 	}
 
@@ -168,10 +146,10 @@ class ShimmerViewHelper(
 			}
 
 			// translate the shader local matrix
-			linearGradientMatrix!!.setTranslate(2 * gradientX, 0f)
+			linearGradientMatrix?.setTranslate(2 * gradientX, 0f)
 
 			// this is required in order to invalidate the shader's position
-			linearGradient!!.setLocalMatrix(linearGradientMatrix)
+			linearGradient?.setLocalMatrix(linearGradientMatrix)
 		} else {
 			// we're not animating, remove the shader from the paint
 			paint.shader = null

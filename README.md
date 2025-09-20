@@ -20,7 +20,8 @@ dependencies {
 ## Update 5.2: Transition Activity
 How to use it? Please refer to the [`sample`](https://github.com/thanhnamzzz/CommonLib/tree/master/sample/src/main/java/io/virgo_common/common_lib/animationActivity).
 
-## Update 5.1: BlurView
+## Update 5.4: BlurView
+Fix bug
 How to use it? Please refer to the sample - [`BlurActivity`](https://github.com/thanhnamzzz/CommonLib/blob/master/sample/src/main/java/io/virgo_common/common_lib/blurView/BlurActivity.kt).
 
 ##
